@@ -26,14 +26,12 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   //Förlorare om timer tar slut
   useEffect(() => {
     if (xTime === 0) {
-      console.log("X lost");
       setWinner("0");
     }
     if (oTime === 0) {
-      console.log("O lost");
       setWinner("X");
     }
-  }, [xTime, oTime]);
+  }, [xTime, oTime, setWinner]);
 
    //Stoppa timer om vinnare utses
   useEffect(() => {

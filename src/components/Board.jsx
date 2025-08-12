@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import GameTimer from './GameTimer'
 
 function Square({value, onSquareClick}) {
@@ -71,7 +71,7 @@ export default function Board() {
           <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
           <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
       </div>
-      <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner}></GameTimer>
+      <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
 
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
