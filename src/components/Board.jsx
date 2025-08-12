@@ -1,4 +1,6 @@
-import {useState} from 'react';
+import { useState, useEffect } from 'react';
+import GameTimer from './GameTimer'
+
 function Square({value, onSquareClick}) {
 
   return (
@@ -14,6 +16,14 @@ function Square({value, onSquareClick}) {
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
+  const [winner, setWinner] = useState(false);
+
+  useEffect(() => {
+    const newWinner = calculateWinner(squares);
+    if (newWinner && newWinner !== winner) {
+      setWinner(newWinner);
+    }
+  }, [squares, winner])
 
   function handleClick(i) {
 
@@ -33,7 +43,7 @@ export default function Board() {
     setXIsNext(!xIsNext); // Update state of which symbol is next
   }
 
-  const winner = calculateWinner(squares);
+  //const winner = calculateWinner(squares);
   const isTie = boardIsFull(squares);
   let status;
 
@@ -61,6 +71,7 @@ export default function Board() {
           <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
           <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
       </div>
+      <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
 
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
