@@ -64,13 +64,12 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-//  const [endOfGame,setEndOfGame] = useState(false);
 
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
 
 
   function getSquare(winner, winningTiles, i) {
-  const isWinningTile = winner && winningTiles.includes(i);
+  const isWinningTile = winner && Array.isArray(winningTiles) && winningTiles.includes(i);
   const delay =
     isWinningTile && winner
       ? winningTiles.indexOf(i) * 0.3 // delay based on order
