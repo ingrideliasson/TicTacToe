@@ -12,7 +12,8 @@ function Square({value, onSquareClick}) {
 }
 
 export default function AiBoardImproved() {
-  const [currentTurn, setCurrentTurn] = useState('X'); // User always starts. TODO: user should not always start
+  const [startingPlayer, setStartingPlayer] = useState('X'); // Starting player can be changed
+  const [currentTurn, setCurrentTurn] = useState(startingPlayer); // Starting player starts
   const [squares, setSquares] = useState(Array(9).fill(null));
 
   let humanSymbol = 'X'; // TODO: user should be able to choose symbol at start of game
@@ -93,9 +94,13 @@ export default function AiBoardImproved() {
 
   const winner = calculateWinner(squares);
   const isTie = boardIsFull(squares);
+  const isFirstMove = boardIsEmpty(squares);
   let status;
 
-  if (winner){
+  if (isFirstMove){
+    status = "First player: " + currentTurn;
+  } else {
+    if (winner){
     status = winner + " wins!"
   } else { 
     if (isTie){ // There is no winner - if the board is filled, there is a tie
@@ -103,6 +108,39 @@ export default function AiBoardImproved() {
     } else {
       status = "Next player: " + currentTurn;
     }
+  }
+  }
+  
+
+  // Wait 3 seconds before resetting the board when the game ends
+  useEffect(() => {
+    if (winner || isTie) {
+      const timer = setTimeout (() => {
+        gameOver();
+      }, 3000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [winner, isTie])
+
+  function gameOver(){ // Triggered only when game ends by win or tie
+    // Switch starting player
+    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X';
+    setStartingPlayer(nextStartingPlayer);
+    setCurrentTurn(nextStartingPlayer);
+
+    // Empty the board
+    setSquares(Array(9).fill(null));
+  }
+
+  function resetGame(){ // Triggered only when "reset button" is clicked
+    const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player as when before the game was reset
+    setStartingPlayer(nextStartingPlayer);
+    setCurrentTurn(nextStartingPlayer);
+
+    // Empty the board
+    setSquares(Array(9).fill(null));
+
   }
 
   return (
@@ -121,6 +159,10 @@ export default function AiBoardImproved() {
       </div>
 
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
+      <button className="font-cherry text-white p-2 bg-blue-100 text-blue-500 rounded-lg "
+      onClick={() => resetGame()}>
+        Reset game
+        </button>
     </div>
   );
 }
@@ -149,6 +191,10 @@ function calculateWinner(squares) {
 
 function boardIsFull(squares) {
   return squares.every(square => square !== null);
+}
+
+function boardIsEmpty(squares) {
+  return squares.every(square => square === null);
 }
 
 // Helper function to check if any player can win on the next move
