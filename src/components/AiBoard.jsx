@@ -1,111 +1,143 @@
-import {useState, useEffect} from 'react';
-function Square({value, onSquareClick}) {
+import { useState, useEffect } from 'react';
+import { motion } from "framer-motion";
+
+function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
+  const animationVariants = [
+    { y: -100, x: -100 },
+    { y: -100, x: 0 },
+    { y: -100, x: 100 },
+    { y: 0, x: -100 },
+    { y: 0, x: -100 },
+    { y: 0, x: 100 },
+    { y: 100, x: -100 },
+    { y: 100, x: 0 },
+    { y: 100, x: 100 }
+  ];
+
+  const [highlight, setHighlight] = useState(false);
+
+  // Start highlight animation after delay
+  useEffect(() => {
+    if (isWinningTile) {
+      const timeout = setTimeout(() => setHighlight(true), delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isWinningTile, delay]);
 
   return (
-  <button 
-  className="border-2 border-sky-300 text-5xl text-sky-500 h-48 w-48 font-cherry"
-  onClick={onSquareClick}
-  >
-    {value}
-  </button>
-);
+    <button
+      className="border-2 border-sky-300 h-48 w-48 font-cherry flex items-center justify-center"
+      onClick={onSquareClick}
+    >
+      {value && (
+        <motion.span
+          key={value + index}
+          initial={{ ...animationVariants[index], opacity: 0, scale: 0.5 }}
+          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 500, damping: 20 }}
+          className={`text-5xl ${
+            isWinningTile ? "text-green-500" : "text-sky-500"
+          }`}
+        >
+          <motion.div
+            animate={highlight ? { scale: 1.3 } : { scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 10
+            }}
+          >
+            {value}
+          </motion.div>
+        </motion.span>
+      )}
+    </button>
+  );
 }
 
 export default function AI_Board() {
-  const [currentTurn, setCurrentTurn] = useState('X'); // User always starts. TODO: user should not always start
+  const [currentTurn, setCurrentTurn] = useState('X');
   const [squares, setSquares] = useState(Array(9).fill(null));
 
-  let humanSymbol = 'X'; // TODO: user should be able to choose symbol at start of game
+  let humanSymbol = 'X';
   let aiSymbol = 'O';
 
-  // Generic move function that handles both human and AI moves
   function makeMove(i, playerSymbol) {
-    if (squares[i] || calculateWinner(squares)) { // If square is already filled or there is already a winner, return early
-        return;
+    if (squares[i] || calculateWinner(squares)[0]) {
+      return;
     }
-
     const nextSquares = squares.slice();
-    nextSquares[i] = playerSymbol; // Fill square
-
-    setSquares(nextSquares); // Update state of squares array
-    setCurrentTurn(prevTurn => (prevTurn === humanSymbol ? aiSymbol : humanSymbol)); // Update state of who's turn it is, if currently X, set to O, and vice versa
+    nextSquares[i] = playerSymbol;
+    setSquares(nextSquares);
+    setCurrentTurn(prevTurn => (prevTurn === humanSymbol ? aiSymbol : humanSymbol));
   }
 
-  //Only for human moves
   function humanMove(i) {
-    if (currentTurn !== humanSymbol) return; // Prevent human from clicking when it's not their turn
-    makeMove(i, humanSymbol)
-  }
-  
-  // Currently, the AI makes a random move
-  function computerMove(){
-    const emptySquareIndexes = [];
-
-    // Find which squares are empty, extract their indeces to new array
-    squares.forEach((element, index) => { 
-        if (element === null) {
-            emptySquareIndexes.push(index);
-        }
-    });
-
-    const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
-    const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
-    makeMove(randomIndex, aiSymbol) // Call function to fill square 
+    if (currentTurn !== humanSymbol) return;
+    makeMove(i, humanSymbol);
   }
 
-    useEffect(() => {
-    // Check if it’s AI’s turn and no winner yet
-    if (!calculateWinner(squares) && !boardIsFull(squares) && currentTurn === aiSymbol) {
-        // Call AI move with a small delay
-        const timer = setTimeout(() => {
+  function computerMove() {
+    const emptySquareIndexes = squares
+      .map((sq, idx) => (sq === null ? idx : null))
+      .filter(idx => idx !== null);
+
+    if (emptySquareIndexes.length === 0) return;
+
+    const randomIndex = emptySquareIndexes[Math.floor(Math.random() * emptySquareIndexes.length)];
+    makeMove(randomIndex, aiSymbol);
+  }
+
+  useEffect(() => {
+    if (!calculateWinner(squares)[0] && !boardIsFull(squares) && currentTurn === aiSymbol) {
+      const timer = setTimeout(() => {
         computerMove();
-        }, 1000);
-
-        return () => clearTimeout(timer); // Timer cleanup
+      }, 1000);
+      return () => clearTimeout(timer);
     }
-    }, [squares, currentTurn]); // useEffect triggers when dependencies in here changes, so when the board updates or player turn changes
+  }, [squares, currentTurn]);
 
-
-
-  const winner = calculateWinner(squares);
+  const [winner, winningTiles] = calculateWinner(squares);
   const isTie = boardIsFull(squares);
-  let status;
 
-  if (winner){
-    status = winner + " wins!"
-  } else { 
-    if (isTie){ // There is no winner - if the board is filled, there is a tie
-      status = "Game ties."
-    } else {
-      status = "Next player: " + currentTurn;
-    }
+  let status;
+  if (winner) {
+    status = winner + " wins!";
+  } else if (isTie) {
+    status = "Game ties.";
+  } else {
+    status = "Next player: " + currentTurn;
   }
+
+  const tileIdxs = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
   return (
     <div className="flex flex-col items-center justify-center gap-8">
-      
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
-          <Square value={squares[0]} onSquareClick={() => humanMove(0)}/>
-          <Square value={squares[1]} onSquareClick={() => humanMove(1)}/>
-          <Square value={squares[2]} onSquareClick={() => humanMove(2)}/>
-          <Square value={squares[3]} onSquareClick={() => humanMove(3)}/>
-          <Square value={squares[4]} onSquareClick={() => humanMove(4)}/>
-          <Square value={squares[5]} onSquareClick={() => humanMove(5)}/>
-          <Square value={squares[6]} onSquareClick={() => humanMove(6)}/>
-          <Square value={squares[7]} onSquareClick={() => humanMove(7)}/>
-          <Square value={squares[8]} onSquareClick={() => humanMove(8)}/>
+        {tileIdxs.map(i => {
+          const isWinningTile = winner && Array.isArray(winningTiles) && winningTiles.includes(i);
+          const delay = isWinningTile ? winningTiles.indexOf(i) * 0.3 : 0;
+          return (
+            <Square
+              key={i}
+              value={squares[i]}
+              index={i}
+              onSquareClick={() => humanMove(i)}
+              isWinningTile={isWinningTile}
+              delay={delay}
+            />
+          );
+        })}
       </div>
-
-      <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
+      <h1 className="text-4xl text-pink-800 font-cherry">{status}</h1>
     </div>
   );
 }
 
-
 function calculateWinner(squares) {
   const lines = [
     [0, 1, 2],
-    [3, 4, 5], 
+    [3, 4, 5],
     [6, 7, 8],
     [0, 3, 6],
     [1, 4, 7],
@@ -114,13 +146,13 @@ function calculateWinner(squares) {
     [2, 4, 6]
   ];
 
-    for (let i = 0; i < lines.length; i++) {
-      const [a, b, c] = lines[i];
-      if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a] // Returns 'X' or 'O'
-      }
+  for (let i = 0; i < lines.length; i++) {
+    const [a, b, c] = lines[i];
+    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+      return [squares[a], lines[i]];
     }
-  return null;
+  }
+  return [null, null];
 }
 
 function boardIsFull(squares) {
