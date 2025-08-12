@@ -11,7 +11,7 @@ function Square({value, onSquareClick}) {
 );
 }
 
-export default function AI_Board() {
+export default function AiBoardImproved() {
   const [currentTurn, setCurrentTurn] = useState('X'); // User always starts. TODO: user should not always start
   const [squares, setSquares] = useState(Array(9).fill(null));
 
@@ -37,8 +37,31 @@ export default function AI_Board() {
     makeMove(i, humanSymbol)
   }
   
-  // Currently, the AI makes a random move
+  // AI moves
   function computerMove(){
+
+    // Check if AI can win this turn, if so, make the move
+    let move = findWinningMove(squares, aiSymbol);
+    if (move !== null){
+        makeMove(move, aiSymbol);
+        return;
+    }
+
+    // Check if human can win next turn, if so, block them
+    move = findWinningMove(squares, humanSymbol);
+    if (move !== null){
+        makeMove(move, aiSymbol);
+        return;
+    }
+
+    // If neither the AI or the human can win, place a pawn in a line where we already have a pawn (if possible)
+    move = findStrategicMove(squares, aiSymbol)
+    if (move !== null){
+        makeMove(move, aiSymbol)
+        return;
+    }
+
+    // Otherwise, place randomly
     const emptySquareIndexes = [];
 
     // Find which squares are empty, extract their indeces to new array
@@ -50,7 +73,8 @@ export default function AI_Board() {
 
     const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
     const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
-    makeMove(randomIndex, aiSymbol) // Call function to fill square 
+    makeMove(randomIndex, aiSymbol) 
+
   }
 
     useEffect(() => {
@@ -125,4 +149,73 @@ function calculateWinner(squares) {
 
 function boardIsFull(squares) {
   return squares.every(square => square !== null);
+}
+
+// Helper function to check if any player can win on the next move
+function findWinningMove(squares, symbol){  
+    const lines = [
+    [0, 1, 2],
+    [3, 4, 5], 
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  // Loop through each lines two see if it is winnable (two pawns on a row with one empty square)
+  for (let [a, b, c] of lines) {
+    const line =  [squares[a], squares[b], squares[c]];
+
+    // Count how many places on a line are taken by the player, and how many on the line are empty
+    const countSymbol = line.filter(val => val === symbol).length;
+    const countEmpty = line.filter(val => val === null).length;
+
+    // If there are exactly 2 pawns and one empty space on the row, return which space is empty so we can fill/block it later
+    if (countSymbol === 2 && countEmpty === 1) {
+        if (squares[a] === null) return a;
+        if (squares[b] === null) return b;
+        if (squares[c] === null) return c;
+    }
+  }
+
+  // If no winning move found, return null
+  return null;
+
+}
+
+// Helper function for the AI to place a pawn on a row where it already has a pawn
+function findStrategicMove(squares, aiSymbol){
+    const lines = [
+    [0, 1, 2],
+    [3, 4, 5], 
+    [6, 7, 8],
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+    [0, 4, 8],
+    [2, 4, 6]
+  ];
+
+  let possibleMoves = [];
+
+  for (let [a, b, c] of lines){
+    const line = [squares[a], squares[b], squares[c]];
+
+    const countSymbol = line.filter(val => val === aiSymbol).length;
+    const countEmpty = line.filter(val => val === aiSymbol).length;
+
+    if (countSymbol === 1 && countEmpty === 2){
+        if (squares[a] === null) possibleMoves.push(a);
+        if (squares[b] === null) possibleMoves.push(b);
+        if (squares[c] === null) possibleMoves.push(c);
+    }
+
+  // If there are possible moves, pick one randomly
+  if (possibleMoves.length > 0){
+    return possibleMoves[Math.floor(Math.random() * possibleMoves.length)];
+  }
+}
+  return null;
 }
