@@ -28,6 +28,15 @@ export default function Board() {
   }, [squares, winner])
 
 
+  
+  // Reset board when gameTime changes
+  useEffect(() => {
+    setSquares(Array(9).fill(null));
+    setXIsNext(true);
+    setWinner(null);
+  }, [gameTime]);
+
+
   function handleClick(i) {
 
     if (squares[i] || calculateWinner(squares)) {  // If the square is already filled or there is a winner, return early
