@@ -23,6 +23,12 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
     };
   }, [xIsNext]);
 
+  //uppdatera gametime vid ändring
+  useEffect(() => {
+    setXTime(gameTime)
+    setOTime(gameTime)
+  }, [gameTime]);
+
   //Förlorare om timer tar slut
   useEffect(() => {
     if (xTime === 0) {
@@ -84,11 +90,11 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
     <div className="flex w-full justify-between items-center">
       <div className="flex flex-col items-center pl-5">
         <p className="font-bold">X-player</p>
-        <div>{xTime.toFixed(1)}</div>
+        <div>{Number(xTime).toFixed(1)}</div>
       </div>
       <div className="flex flex-col items-center pr-5">
         <p className="font-bold">O-player</p>
-        <div>{oTime.toFixed(1)}</div>
+        <div>{Number(oTime).toFixed(1)}</div>
       </div>
     </div>
   );
