@@ -1,4 +1,6 @@
 import {useState, useEffect} from 'react';
+import Scoreboard from './Scoreboard.jsx'
+
 function Square({value, onSquareClick}) {
 
   return (
@@ -96,6 +98,7 @@ export default function AI_Board() {
           <Square value={squares[8]} onSquareClick={() => humanMove(8)}/>
       </div>
 
+      { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
   );

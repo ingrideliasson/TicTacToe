@@ -74,7 +74,7 @@ export default function Board() {
       </div>
       <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
 
-      <Scoreboard winner={winner}/>
+      { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
   );
