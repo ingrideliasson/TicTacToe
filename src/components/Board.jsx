@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import GameTimer from './GameTimer'
+import Scoreboard from './Scoreboard.jsx'
 
 function Square({value, onSquareClick}) {
 
@@ -73,6 +74,7 @@ export default function Board() {
       </div>
       <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
 
+      <Scoreboard winner={winner}/>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
   );
