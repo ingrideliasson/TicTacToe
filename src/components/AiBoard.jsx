@@ -11,7 +11,8 @@ function Square({value, onSquareClick}) {
 );
 }
 
-export default function AiBoardImproved() {
+export default function AiBoard() {
+  const [difficulty, setDifficulty] = useState(null) // easy || medium || hard
   const [startingPlayer, setStartingPlayer] = useState('X'); // Starting player can be changed
   const [currentTurn, setCurrentTurn] = useState(startingPlayer); // Starting player starts
   const [squares, setSquares] = useState(Array(9).fill(null));
@@ -34,6 +35,7 @@ export default function AiBoardImproved() {
 
   //Only for human moves
   function humanMove(i) {
+    if (!difficulty) return;
     if (currentTurn !== humanSymbol) return; // Prevent human from clicking when it's not their turn
     makeMove(i, humanSymbol)
   }
@@ -41,55 +43,172 @@ export default function AiBoardImproved() {
   // AI moves
   function computerMove(){
 
-    // Check if AI can win this turn, if so, make the move
-    let move = findWinningMove(squares, aiSymbol);
-    if (move !== null){
+    if (difficulty === "easy"){
+      let move = findWinningMove(squares, aiSymbol);
+      if (move !== null){
         makeMove(move, aiSymbol);
         return;
-    }
+      }
 
-    // Check if human can win next turn, if so, block them
-    move = findWinningMove(squares, humanSymbol);
-    if (move !== null){
+      move = findWinningMove(squares, humanSymbol);
+      if (move !== null){
         makeMove(move, aiSymbol);
         return;
+      }
+
+      const emptySquareIndexes = [];
+      squares.forEach((element, index) => { 
+          if (element === null) {
+              emptySquareIndexes.push(index);
+          }
+      });
+
+      const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
+      const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
+      makeMove(randomIndex, aiSymbol) 
+      return;
     }
 
-    // If neither the AI or the human can win, place a pawn in a line where we already have a pawn (if possible)
-    move = findStrategicMove(squares, aiSymbol)
-    if (move !== null){
-        makeMove(move, aiSymbol)
+
+    if (difficulty === "medium"){
+      // Check if AI can win this turn, if so, make the move
+      let move = findWinningMove(squares, aiSymbol);
+      if (move !== null){
+          makeMove(move, aiSymbol);
+          return;
+      }
+
+      // Check if human can win next turn, if so, block them
+      move = findWinningMove(squares, humanSymbol);
+      if (move !== null){
+          makeMove(move, aiSymbol);
+          return;
+      }
+
+      // If neither the AI or the human can win, place a pawn in a line where we already have a pawn (if possible)
+      move = findStrategicMove(squares, aiSymbol)
+      if (move !== null){
+          makeMove(move, aiSymbol)
+          return;
+      }
+
+      // Otherwise, place randomly
+      const emptySquareIndexes = [];
+      squares.forEach((element, index) => { 
+          if (element === null) {
+              emptySquareIndexes.push(index);
+          }
+      });
+
+      const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
+      const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
+      makeMove(randomIndex, aiSymbol)
+      return;
+    }
+
+    if (difficulty === "hard"){
+
+      // If AI is first, place in the middle
+      if (boardIsEmpty(squares) && startingPlayer === aiSymbol){
+        makeMove(4, aiSymbol);
         return;
+      }
+
+      // AI's second move after starting
+      if ((squares.filter((sq) => sq !== null).length === 2) && startingPlayer === aiSymbol){
+        const corners = [0, 2, 6, 8];
+        const random = Math.floor(Math.random() * corners.length); // Pick random corner
+        const randomCorner = corners[random];
+        makeMove(randomCorner, aiSymbol);
+        return;
+      }
+
+      // If human starts in the middle, AI places in corner
+      if ((squares.filter((sq) => sq !== null).length === 1) && startingPlayer === humanSymbol){
+        const corners = [0, 2, 6, 8];
+        const random = Math.floor(Math.random() * corners.length); // Pick random corner
+        const randomCorner = corners[random];
+        makeMove(randomCorner, aiSymbol);
+        return;
+      }
+
+      let move = findWinningMove(squares, aiSymbol);
+      if (move !== null){
+          makeMove(move, aiSymbol);
+          return;
+      }
+
+      move = findWinningMove(squares, humanSymbol);
+      if (move !== null){
+          makeMove(move, aiSymbol);
+          return;
+      }
+
+      move = findStrategicMove(squares, aiSymbol)
+      if (move !== null){
+          makeMove(move, aiSymbol)
+          return;
+      }
+
+      const emptySquareIndexes = [];
+      squares.forEach((element, index) => { 
+          if (element === null) {
+              emptySquareIndexes.push(index);
+          }
+      });
+
+      const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
+      const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
+      makeMove(randomIndex, aiSymbol) 
+      return;
     }
-
-    // Otherwise, place randomly
-    const emptySquareIndexes = [];
-
-    // Find which squares are empty, extract their indeces to new array
-    squares.forEach((element, index) => { 
-        if (element === null) {
-            emptySquareIndexes.push(index);
-        }
-    });
-
-    const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
-    const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
-    makeMove(randomIndex, aiSymbol) 
-
   }
 
-    useEffect(() => {
-    // Check if it’s AI’s turn and no winner yet
-    if (!calculateWinner(squares) && !boardIsFull(squares) && currentTurn === aiSymbol) {
-        // Call AI move with a small delay
-        const timer = setTimeout(() => {
+  // // This is neeced to trigger the AI to start after difficulty has been set when they are first player
+  //   useEffect(() => {
+  //     if (
+  //       difficulty &&
+  //       boardIsEmpty(squares) &&
+  //       startingPlayer === aiSymbol &&
+  //       currentTurn === aiSymbol
+  //     ) {
+  //       const timer = setTimeout(() => {
+  //         computerMove();
+  //       }, 1000);
+
+  //       return clearTimeout(timer);
+  //     }
+  //   }, [difficulty, squares, currentTurn, startingPlayer]);
+
+  // // For regular AI moves
+  //   useEffect(() => {
+  //     // Check if it’s AI’s turn and no winner yet, and difficulty has been set
+  //     if (
+  //       difficulty && 
+  //       !calculateWinner(squares) && 
+  //       !boardIsFull(squares) && 
+  //       currentTurn === aiSymbol
+  //     ) {
+  //         // Call AI move with a small delay
+  //         const timer = setTimeout(() => {
+  //         computerMove();
+  //         }, 1000);
+
+  //         return () => clearTimeout(timer); // Timer cleanup
+  //   }
+  //   }, [squares, currentTurn]); // useEffect triggers when dependencies in here changes, so when the board updates or player turn changes
+
+  useEffect(() => {
+    if (!difficulty) return; // wait for difficulty
+    if (currentTurn !== aiSymbol) return; // only AI's turn
+    if (calculateWinner(squares) || boardIsFull(squares)) return; // game over
+
+    const timer = setTimeout(() => {
         computerMove();
-        }, 1000);
+      }, 1000);
 
-        return () => clearTimeout(timer); // Timer cleanup
-    }
-    }, [squares, currentTurn]); // useEffect triggers when dependencies in here changes, so when the board updates or player turn changes
-
+      return () => clearTimeout(timer);
+    }, [difficulty, currentTurn, squares]);
 
 
   const winner = calculateWinner(squares);
@@ -110,41 +229,39 @@ export default function AiBoardImproved() {
     }
   }
   }
-  
 
-  // Wait 3 seconds before resetting the board when the game ends
-  useEffect(() => {
+
+  function playAgain(){ // Triggered when "play again" is clicked
     if (winner || isTie) {
-      const timer = setTimeout (() => {
-        gameOver();
-      }, 3000);
+      const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
+      setStartingPlayer(nextStartingPlayer);
+      setCurrentTurn(nextStartingPlayer);
 
-      return () => clearTimeout(timer);
+      // Empty the board
+      setSquares(Array(9).fill(null));
+      setDifficulty(null);
+    } else {
+      return;
     }
-  }, [winner, isTie])
-
-  function gameOver(){ // Triggered only when game ends by win or tie
-    // Switch starting player
-    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X';
-    setStartingPlayer(nextStartingPlayer);
-    setCurrentTurn(nextStartingPlayer);
-
-    // Empty the board
-    setSquares(Array(9).fill(null));
+    
   }
 
-  function resetGame(){ // Triggered only when "reset button" is clicked
-    const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player as when before the game was reset
-    setStartingPlayer(nextStartingPlayer);
-    setCurrentTurn(nextStartingPlayer);
-
-    // Empty the board
-    setSquares(Array(9).fill(null));
-
-  }
 
   return (
     <div className="flex flex-col items-center justify-center gap-8">
+
+      <div className="flex gap-4 items-center">
+      <label className="font-nunito text-lg">Difficulty:</label> 
+        <select
+          value={difficulty || ""}
+          onChange={(e) => setDifficulty(e.target.value)}
+          disabled={!boardIsEmpty(squares)}>
+          <option value="" disabled>Select difficulty</option>
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
       
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
           <Square value={squares[0]} onSquareClick={() => humanMove(0)}/>
@@ -159,14 +276,13 @@ export default function AiBoardImproved() {
       </div>
 
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
-      <button className="font-cherry text-white p-2 bg-blue-100 text-blue-500 rounded-lg "
-      onClick={() => resetGame()}>
-        Reset game
+      <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+      onClick={() => playAgain()}>
+        Play again
         </button>
     </div>
   );
 }
-
 
 function calculateWinner(squares) {
   const lines = [
@@ -214,7 +330,7 @@ function findWinningMove(squares, symbol){
   for (let [a, b, c] of lines) {
     const line =  [squares[a], squares[b], squares[c]];
 
-    // Count how many places on a line are taken by the player, and how many on the line are empty
+    // Count how many places on a line are taken by the same player, and how many on the line are empty
     const countSymbol = line.filter(val => val === symbol).length;
     const countEmpty = line.filter(val => val === null).length;
 
@@ -265,3 +381,15 @@ function findStrategicMove(squares, aiSymbol){
 }
   return null;
 }
+
+
+
+  // Can be used to reset game
+  // function resetGame(){
+  //   const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep same starting player
+  //   setStartingPlayer(nextStartingPlayer);
+  //   setCurrentTurn(nextStartingPlayer);
+
+  //   // Empty the board
+  //   setSquares(Array(9).fill(null));
+  // }
