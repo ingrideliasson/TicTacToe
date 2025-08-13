@@ -86,14 +86,16 @@ export default function Board() {
   );
   }
 
-  const [winner, setWinner] = useState(false);
+
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    const newWinner = calculateWinner(squares);
-    if (newWinner && newWinner !== winner) {
-      setWinner(newWinner);
+    const [newWinnerSymbol, winningTiles] = calculateWinner(squares);
+    if (newWinnerSymbol && newWinnerSymbol !== winner) {
+      setWinner([newWinnerSymbol, winningTiles]);
     }
-  }, [squares, winner])
+  }, [squares, winner]);
+
 
   function handleClick(i) {
 
@@ -121,7 +123,7 @@ export default function Board() {
   let status;
 
   if (winner){
-    status = winner + " wins!"
+    status = winner[0] + " wins!"
   } else { 
     if (isTie){ // There is no winner - if the board is filled, there is a tie
       status = "Game ties."
