@@ -2,33 +2,105 @@ import { useState, useEffect } from 'react';
 import GameTimer from './GameTimer'
 import Scoreboard from './Scoreboard.jsx'
 
-function Square({value, onSquareClick}) {
+
+import { motion, AnimatePresence } from "framer-motion";
+
+
+
+function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
+  const animationVariants = [
+    { y: -100, x: -100 },
+    { y: -100, x: 0 },
+    { y: -100, x: 100 },
+    { y: 0, x: -100 },
+    { y: 0, x: -100 },
+    { y: 0, x: 100 },
+    { y: 100, x: -100 },
+    { y: 100, x: 0 },
+    { y: 100, x: 100 }
+  ];
+
+  const [highlight, setHighlight] = useState(false);
+
+  // Start highlight animation after delay
+  useEffect(() => {
+    if (isWinningTile) {
+      const timeout = setTimeout(() => setHighlight(true), delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isWinningTile, delay]);
 
   return (
-  <button 
-  className="border-2 border-sky-300 text-5xl text-sky-500 h-48 w-48 font-cherry"
-  onClick={onSquareClick}
-  >
-    {value}
-  </button>
-);
+    <button
+      className="border-2 border-sky-300 h-48 w-48 font-cherry flex items-center justify-center"
+      onClick={onSquareClick}
+    >
+      {value && (
+        <motion.span
+          key={value}
+          initial={{ ...animationVariants[index], opacity: 0, scale: 0.5 }}
+          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 500, damping: 20 }}
+          className={`text-5xl ${
+            isWinningTile ? "text-green-500" : "text-sky-500"
+          }`}
+        >
+          <motion.div
+            animate={highlight ? { scale: 1.3 } : { scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 10
+            }}
+          >
+            {value}
+          </motion.div>
+        </motion.span>
+      )}
+    </button>
+  );
 }
+
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-  const [winner, setWinner] = useState(false);
+
+  const tileIdxs = [0,1,2,3,4,5,6,7,8];
+
+
+  function getSquare(winner, winningTiles, i) {
+  const isWinningTile = winner && Array.isArray(winningTiles) && winningTiles.includes(i);
+  const delay =
+    isWinningTile && winner
+      ? winningTiles.indexOf(i) * 0.3 // delay based on order
+      : 0;
+
+  return (
+    <Square
+      value={squares[i]}
+      index={i}
+      onSquareClick={() => handleClick(i)}
+      isWinningTile={isWinningTile}
+      delay={delay}
+    />
+  );
+  }
+
+
+  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
-    const newWinner = calculateWinner(squares);
-    if (newWinner && newWinner !== winner) {
-      setWinner(newWinner);
+    const [newWinnerSymbol, winningTiles] = calculateWinner(squares);
+    if (newWinnerSymbol && newWinnerSymbol !== winner) {
+      setWinner([newWinnerSymbol, winningTiles]);
     }
-  }, [squares, winner])
+  }, [squares, winner]);
+
 
   function handleClick(i) {
 
-    if (squares[i] || calculateWinner(squares)) {  // If the square is already filled or there is a winner, return early
+    if (squares[i] || calculateWinner(squares)[0]) {  // If the square is already filled or there is a winner, return early
       return;
     }
 
@@ -44,12 +116,15 @@ export default function Board() {
     setXIsNext(!xIsNext); // Update state of which symbol is next
   }
 
-  //const winner = calculateWinner(squares);
+
+  const [_,winningTiles] = calculateWinner(squares);
+
+
   const isTie = boardIsFull(squares);
   let status;
 
   if (winner){
-    status = winner + " wins!"
+    status = winner[0] + " wins!"
   } else { 
     if (isTie){ // There is no winner - if the board is filled, there is a tie
       status = "Game ties."
@@ -59,26 +134,22 @@ export default function Board() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8">
-      
+      <div className="flex flex-col items-center justify-center gap-8">
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
-          <Square value={squares[0]} onSquareClick={() => handleClick(0)}/>
-          <Square value={squares[1]} onSquareClick={() => handleClick(1)}/>
-          <Square value={squares[2]} onSquareClick={() => handleClick(2)}/>
-          <Square value={squares[3]} onSquareClick={() => handleClick(3)}/>
-          <Square value={squares[4]} onSquareClick={() => handleClick(4)}/>
-          <Square value={squares[5]} onSquareClick={() => handleClick(5)}/>
-          <Square value={squares[6]} onSquareClick={() => handleClick(6)}/>
-          <Square value={squares[7]} onSquareClick={() => handleClick(7)}/>
-          <Square value={squares[8]} onSquareClick={() => handleClick(8)}/>
+      {tileIdxs.map((i)=>
+      getSquare(winner, winningTiles, i))
+        }
       </div>
       <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
 
       { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
+
   );
 }
+
+
 
 
 function calculateWinner(squares) {
@@ -96,10 +167,10 @@ function calculateWinner(squares) {
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-        return squares[a] // Returns 'X' or 'O'
+        return [squares[a],lines[i]] // Returns 'X' or 'O'
       }
     }
-  return null;
+  return [null,null];
 }
 
 function boardIsFull(squares) {
