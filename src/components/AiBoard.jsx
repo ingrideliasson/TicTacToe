@@ -116,9 +116,20 @@ export default function AiBoard() {
 
       // AI's second move after starting
       if ((squares.filter((sq) => sq !== null).length === 2) && startingPlayer === aiSymbol){
-        const corners = [0, 2, 6, 8];
-        const random = Math.floor(Math.random() * corners.length); // Pick random corner
-        const randomCorner = corners[random];
+        // Checks that the AI places their pawn in a corner but not the one opposite to where there is already a pawn
+        let possibleCorners;
+        if (squares[0] !== null || squares[8] !== null){
+            possibleCorners = [2 ,6];
+
+        } else if (squares[2]!== null || squares[6] !== null) {
+          possibleCorners =  [0, 8];
+
+        } else{
+          possibleCorners = [0, 2, 6, 8]; // If human did not place in a corner, all corners are possible
+        }
+
+        const random = Math.floor(Math.random() * possibleCorners.length); // Pick random corner
+        const randomCorner = possibleCorners[random];
         makeMove(randomCorner, aiSymbol);
         return;
       }
@@ -128,8 +139,11 @@ export default function AiBoard() {
         const corners = [0, 2, 6, 8];
         const random = Math.floor(Math.random() * corners.length); // Pick random corner
         const randomCorner = corners[random];
-        makeMove(randomCorner, aiSymbol);
-        return;
+        if (squares[randomCorner] === null) {
+          makeMove(randomCorner, aiSymbol);
+          return;
+        }
+        
       }
 
       let move = findWinningMove(squares, aiSymbol);
@@ -163,40 +177,6 @@ export default function AiBoard() {
       return;
     }
   }
-
-  // // This is neeced to trigger the AI to start after difficulty has been set when they are first player
-  //   useEffect(() => {
-  //     if (
-  //       difficulty &&
-  //       boardIsEmpty(squares) &&
-  //       startingPlayer === aiSymbol &&
-  //       currentTurn === aiSymbol
-  //     ) {
-  //       const timer = setTimeout(() => {
-  //         computerMove();
-  //       }, 1000);
-
-  //       return clearTimeout(timer);
-  //     }
-  //   }, [difficulty, squares, currentTurn, startingPlayer]);
-
-  // // For regular AI moves
-  //   useEffect(() => {
-  //     // Check if it’s AI’s turn and no winner yet, and difficulty has been set
-  //     if (
-  //       difficulty && 
-  //       !calculateWinner(squares) && 
-  //       !boardIsFull(squares) && 
-  //       currentTurn === aiSymbol
-  //     ) {
-  //         // Call AI move with a small delay
-  //         const timer = setTimeout(() => {
-  //         computerMove();
-  //         }, 1000);
-
-  //         return () => clearTimeout(timer); // Timer cleanup
-  //   }
-  //   }, [squares, currentTurn]); // useEffect triggers when dependencies in here changes, so when the board updates or player turn changes
 
   useEffect(() => {
     if (!difficulty) return; // wait for difficulty
@@ -381,15 +361,3 @@ function findStrategicMove(squares, aiSymbol){
 }
   return null;
 }
-
-
-
-  // Can be used to reset game
-  // function resetGame(){
-  //   const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep same starting player
-  //   setStartingPlayer(nextStartingPlayer);
-  //   setCurrentTurn(nextStartingPlayer);
-
-  //   // Empty the board
-  //   setSquares(Array(9).fill(null));
-  // }
