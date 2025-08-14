@@ -1,4 +1,6 @@
 import { useState, useEffect, useRef } from "react";
+import { color, motion, useAnimation } from "framer-motion";
+import { use } from "framer-motion/m";
 
 function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   const xTimerRef = useRef(null);
@@ -6,6 +8,10 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
 
   const [xTime, setXTime] = useState(gameTime);
   const [oTime, setOTime] = useState(gameTime);
+  const animationTriggerO = useAnimation();
+  const animationTriggerX = useAnimation();
+  const [isAnimatingO, setIsAnimatingO] = useState(false);
+  const [isAnimatingX, setIsAnimatingX] = useState(false);
 
   // Starta/stoppa timers när xIsNext ändras
   useEffect(() => {
@@ -22,6 +28,63 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
       clearInterval(oTimerRef.current);
     };
   }, [xIsNext]);
+
+  //starta animation
+  //animation till timer
+  useEffect(() => {
+  if (oTime < 5 && !xIsNext) {
+    setIsAnimatingO(true)
+  }
+  else {
+    setIsAnimatingO(false)
+    }
+    
+  if (xTime < 5 && xIsNext) {
+    setIsAnimatingX(true)
+  }
+  else {
+    setIsAnimatingX(false)
+  } 
+  
+}, [oTime, xTime, xIsNext]);
+
+  //animation till timer
+  useEffect(() => {
+  if (oTime === 0 || xTime === 0) {
+    animationTriggerO.start({ rotate: 0, scale: 1, color: "black" });
+  }
+  if (isAnimatingO) {
+    animationTriggerO.start({
+      rotate: [-20, 20, -20], // frames för animationen
+      scale: [1, 1.5, 1],
+      color: ["red", "darkred", "red"],
+      transition: {
+        duration: 1, // hur lång tid en cykel tar
+        repeat: Infinity, // pågående animation
+        ease: "easeInOut"
+      }
+    });
+  } else {
+    // återställ till normal
+    animationTriggerO.start({ rotate: 0, scale: 1, color: "black" });
+    }
+
+  if (isAnimatingX) {
+    animationTriggerX.start({
+      rotate: [-20, 20, -20], // frames för animationen
+      scale: [1, 1.5, 1],
+      color: ["red", "darkred", "red"],
+      transition: {
+        duration: 1, // hur lång tid en cykel tar
+        repeat: Infinity, // pågående animation
+        ease: "easeInOut"
+      }
+    });
+  } else {
+    // återställ till normal
+    animationTriggerX.start({ rotate: 0, scale: 1, color: "black" });
+  }
+}, [isAnimatingO, isAnimatingX]);
 
   //uppdatera gametime vid ändring
   useEffect(() => {
@@ -90,11 +153,17 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
     <div className="flex w-full justify-between items-center">
       <div className="flex flex-col items-center pl-5">
         <p className="font-bold">X-player</p>
-        <div>{Number(xTime).toFixed(1)}</div>
+        <motion.div
+          initial={{ rotate: 0, scale: 1, color: "black" }}
+          animate={animationTriggerX}
+        >{Number(xTime).toFixed(1)}</motion.div>
       </div>
       <div className="flex flex-col items-center pr-5">
         <p className="font-bold">O-player</p>
-        <div>{Number(oTime).toFixed(1)}</div>
+        <motion.div
+          initial={{ rotate: 0, scale: 1, color: "black" }}
+          animate={animationTriggerO}
+        >{Number(oTime).toFixed(1)}</motion.div>
       </div>
     </div>
   );
