@@ -98,7 +98,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   //Förlorare om timer tar slut
   useEffect(() => {
     if (xTime === 0) {
-      setWinner("0");
+      setWinner("O");
     }
     if (oTime === 0) {
       setWinner("X");
