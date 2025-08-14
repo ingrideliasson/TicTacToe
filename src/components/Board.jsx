@@ -96,7 +96,7 @@ export default function Board() {
     if (newWinnerSymbol && newWinnerSymbol !== winner) {
       setWinner([newWinnerSymbol, winningTiles]);
     }
-  }, [squares, winner])
+  }, [squares]);
 
 
   
