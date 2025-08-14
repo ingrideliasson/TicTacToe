@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect , useRef} from 'react';
 import GameTimer from './GameTimer'
 
 
@@ -64,7 +64,9 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
   const [squares, setSquares] = useState(Array(9).fill(null));
-
+  const [winner, setWinner] = useState(null);
+  const [gameTime, setGameTime] = useState(10);
+  const inputRefTimer = useRef();
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
 
 
@@ -87,14 +89,22 @@ export default function Board() {
   }
 
 
-  const [winner, setWinner] = useState(null);
 
   useEffect(() => {
     const [newWinnerSymbol, winningTiles] = calculateWinner(squares);
     if (newWinnerSymbol && newWinnerSymbol !== winner) {
       setWinner([newWinnerSymbol, winningTiles]);
     }
-  }, [squares, winner]);
+  }, [squares, winner])
+
+
+  
+  // Reset board when gameTime changes
+  useEffect(() => {
+    setSquares(Array(9).fill(null));
+    setXIsNext(true);
+    setWinner(null);
+  }, [gameTime]);
 
 
   function handleClick(i) {
@@ -139,8 +149,13 @@ export default function Board() {
       getSquare(winner, winningTiles, i))
         }
       </div>
-      <GameTimer gameTime={5.0} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
-
+      <div>
+        <input type="number" ref={inputRefTimer} placeholder='Ändra timer sekunder'/>
+        <button onClick={() => setGameTime(inputRefTimer.current.value)}>
+          Spara
+        </button>
+      </div>
+      <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
 
