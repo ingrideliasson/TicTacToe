@@ -130,9 +130,13 @@ export default function Board() {
 
 
   const isTie = boardIsFull(squares);
+  const isFirstMove = boardIsEmpty(squares);
   let status;
 
-  if (winner){
+  if(isFirstMove){
+    status = "First player: " + (xIsNext ? 'X' : 'O');
+  } else {
+    if (winner){
     status = winner[0] + " wins!"
   } else { 
     if (isTie){ // There is no winner - if the board is filled, there is a tie
@@ -141,6 +145,9 @@ export default function Board() {
       status = "Next player: " + (xIsNext ? 'X' : 'O');
     }
   }
+  }
+
+  
 
   return (
       <div className="flex flex-col items-center justify-center gap-8">
@@ -196,4 +203,8 @@ function boardIsFull(squares) {
   }
 
   return true; // If all squares are filled, return true
+}
+
+function boardIsEmpty(squares) {
+  return squares.every(square => square === null);
 }
