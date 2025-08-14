@@ -1,5 +1,6 @@
 import { useState, useEffect , useRef} from 'react';
 import GameTimer from './GameTimer'
+import Scoreboard from './Scoreboard.jsx'
 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -79,6 +80,7 @@ export default function Board() {
 
   return (
     <Square
+      key={i}
       value={squares[i]}
       index={i}
       onSquareClick={() => handleClick(i)}
@@ -163,6 +165,7 @@ export default function Board() {
         </button>
       </div>
       <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
+      { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
     </div>
 
