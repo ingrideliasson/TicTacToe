@@ -7,9 +7,9 @@ function Scoreboard({winner}) {
   });
 
   useEffect(() => {
-    if (winner === 'X') {
+    if (winner[0] === 'X') {
       setScores(prevScores => ({ ...prevScores, X: prevScores.X + 1 }));
-    } else if (winner === 'O') {
+    } else if (winner[0] === 'O') {
       setScores(prevScores => ({ ...prevScores, O: prevScores.O + 1 }));
     }
   }, [winner]);
