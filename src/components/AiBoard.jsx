@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import Scoreboard from './Scoreboard.jsx'
 import { motion } from "framer-motion";
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
@@ -129,6 +130,8 @@ export default function AI_Board() {
           );
         })}
       </div>
+
+      { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry">{status}</h1>
     </div>
   );
