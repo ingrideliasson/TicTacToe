@@ -29,8 +29,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
     };
   }, [xIsNext]);
 
-  //starta animation
-  //animation till timer
+  //starta animation när timer är under 5 sek
   useEffect(() => {
   if (oTime < 5 && !xIsNext) {
     setIsAnimatingO(true)
@@ -44,9 +43,13 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   }
   else {
     setIsAnimatingX(false)
-  } 
+    }
   
-}, [oTime, xTime, xIsNext]);
+  if (winner) {
+    setIsAnimatingX(false)
+    setIsAnimatingO(false)
+  }
+}, [oTime, xTime, xIsNext, winner]);
 
   //animation till timer
   useEffect(() => {
