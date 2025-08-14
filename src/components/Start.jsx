@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 text-transparent bg-clip-text">Tic Tac Toe</h1>
-      <p class="m-8 bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 text-transparent bg-clip-text"> Choose game mode:</p>
+      <p className="m-8 bg-gradient-to-r from-blue-600 via-green-500 to-indigo-400 text-transparent bg-clip-text"> Choose game mode:</p>
       <div className="flex space-x-4">
         <Link
           to="/aiboard"
