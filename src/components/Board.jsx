@@ -80,6 +80,7 @@ export default function Board() {
 
   return (
     <Square
+      key={i}
       value={squares[i]}
       index={i}
       onSquareClick={() => handleClick(i)}
