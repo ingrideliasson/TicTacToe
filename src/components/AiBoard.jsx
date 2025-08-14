@@ -1,14 +1,59 @@
 import {useState, useEffect} from 'react';
-function Square({value, onSquareClick}) {
+import { motion, AnimatePresence } from "framer-motion";
+
+
+function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
+  const animationVariants = [
+    { y: -100, x: -100 },
+    { y: -100, x: 0 },
+    { y: -100, x: 100 },
+    { y: 0, x: -100 },
+    { y: 0, x: -100 },
+    { y: 0, x: 100 },
+    { y: 100, x: -100 },
+    { y: 100, x: 0 },
+    { y: 100, x: 100 }
+  ];
+
+  const [highlight, setHighlight] = useState(false);
+
+  // Start highlight animation after delay
+  useEffect(() => {
+    if (isWinningTile) {
+      const timeout = setTimeout(() => setHighlight(true), delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isWinningTile, delay]);
 
   return (
-  <button 
-  className="border-2 border-sky-300 text-5xl text-sky-500 h-48 w-48 font-cherry"
-  onClick={onSquareClick}
-  >
-    {value}
-  </button>
-);
+    <button
+      className="border-2 border-sky-300 h-48 w-48 font-cherry flex items-center justify-center"
+      onClick={onSquareClick}
+    >
+      {value && (
+        <motion.span
+          key={value}
+          initial={{ ...animationVariants[index], opacity: 0, scale: 0.5 }}
+          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          transition={{ type: "spring", stiffness: 500, damping: 20 }}
+          className={`text-5xl ${
+            isWinningTile ? "text-green-500" : "text-sky-500"
+          }`}
+        >
+          <motion.div
+            animate={highlight ? { scale: 1.3 } : { scale: 1 }}
+            transition={{
+              type: "spring",
+              stiffness: 300,
+              damping: 10
+            }}
+          >
+            {value}
+          </motion.div>
+        </motion.span>
+      )}
+    </button>
+  );
 }
 
 export default function AiBoard() {
