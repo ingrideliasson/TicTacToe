@@ -69,7 +69,7 @@ export default function Board() {
   const [gameTime, setGameTime] = useState(10);
   const inputRefTimer = useRef();
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
-
+  const [scores, setScores] = useState({ X: 0, O: 0, });
 
   function getSquare(winner, winningTiles, i) {
   const isWinningTile = winner && Array.isArray(winningTiles) && winningTiles.includes(i);
@@ -144,6 +144,15 @@ export default function Board() {
     }
   }
 
+  // Uppdatera 'scores' 
+  useEffect(() => {
+    if (winner && winner[0] === 'X') {
+      setScores(prevScores => ({ ...prevScores, X: prevScores.X + 1 }));
+    } else if (winner && winner[0] === 'O') {
+      setScores(prevScores => ({ ...prevScores, O: prevScores.O + 1 }));
+    }
+  }, [winner]);
+ 
   return (
       <div className="flex flex-col items-center justify-center gap-8">
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
@@ -158,8 +167,8 @@ export default function Board() {
         </button>
       </div>
       <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
-      { winner ? (<Scoreboard winner={winner}/>) : null }
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
+      { winner && <Scoreboard scores={scores} /> }
     </div>
 
   );
