@@ -173,7 +173,7 @@ export default function Board() {
           Spara
         </button>
       </div>
-      <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner}></GameTimer>
+      <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
       { winner && <Scoreboard scores={scores} /> }
     </div>
