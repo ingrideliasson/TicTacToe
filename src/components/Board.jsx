@@ -189,7 +189,7 @@ export default function Board() {
       </div>
       <GameTimer key={timerKey} gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
-      { (winner || isTie) && <Scoreboard scores={scores} /> }
+      <Scoreboard scores={scores}/>
       <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
       onClick={() => newGame()}> 
         New game

@@ -240,7 +240,7 @@ export default function AiBoard() {
         })}
       </div>
 
-      {(winnerSymbol || isTie) && (<Scoreboard scores={scores} />) }
+      <Scoreboard scores={scores}/>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
       <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
