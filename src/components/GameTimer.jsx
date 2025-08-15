@@ -34,6 +34,8 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
     if (isTie) {
       stopX();
       stopO();
+      setIsAnimatingX(false);
+      setIsAnimatingO(false);
     }
   }, [isTie]);
 
@@ -43,8 +45,8 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
     setIsAnimatingX(xTime <= 5 && xIsNext);
   
   if (winner) {
-    setIsAnimatingX(false)
-    setIsAnimatingO(false)
+    setIsAnimatingX(false);
+    setIsAnimatingO(false);
   }
   }, [oTime, xTime, xIsNext, winner]);
 

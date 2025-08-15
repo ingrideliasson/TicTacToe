@@ -70,6 +70,12 @@ export default function Board() {
   const inputRefTimer = useRef();
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
   const [scores, setScores] = useState({ X: 0, O: 0, });
+  const [isTie, setIsTie] = useState(null);
+
+  //Kollar efter lika
+  useEffect(() => {
+    setIsTie(boardIsFull(squares));
+  }, [squares]);
 
   function getSquare(winner, winningTiles, i) {
   const isWinningTile = winner && Array.isArray(winningTiles) && winningTiles.includes(i);
@@ -130,8 +136,6 @@ export default function Board() {
 
   const [_,winningTiles] = calculateWinner(squares);
 
-
-  const isTie = boardIsFull(squares);
   const isFirstMove = boardIsEmpty(squares);
   let status;
 
