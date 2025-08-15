@@ -31,30 +31,20 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
 
   //starta animation när timer är under 5 sek
   useEffect(() => {
-  if (oTime < 5 && !xIsNext) {
-    setIsAnimatingO(true)
-  }
-  else {
-    setIsAnimatingO(false)
-    }
-    
-  if (xTime < 5 && xIsNext) {
-    setIsAnimatingX(true)
-  }
-  else {
-    setIsAnimatingX(false)
-    }
+    setIsAnimatingO(oTime <= 5 && !xIsNext);
+    setIsAnimatingX(xTime <= 5 && xIsNext);
   
   if (winner) {
     setIsAnimatingX(false)
     setIsAnimatingO(false)
   }
-}, [oTime, xTime, xIsNext, winner]);
+  }, [oTime, xTime, xIsNext, winner]);
 
   //animation till timer
   useEffect(() => {
   if (oTime === 0 || xTime === 0) {
     animationTriggerO.start({ rotate: 0, scale: 1, color: "black" });
+    animationTriggerX.start({ rotate: 0, scale: 1, color: "black" });
   }
   if (isAnimatingO) {
     animationTriggerO.start({
@@ -70,6 +60,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   } else {
     // återställ till normal
     animationTriggerO.start({ rotate: 0, scale: 1, color: "black" });
+    animationTriggerX.start({ rotate: 0, scale: 1, color: "black" });
     }
 
   if (isAnimatingX) {
