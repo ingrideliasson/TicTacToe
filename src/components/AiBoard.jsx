@@ -60,6 +60,7 @@ export default function AiBoard() {
   const [startingPlayer, setStartingPlayer] = useState('X');
   const [currentTurn, setCurrentTurn] = useState(startingPlayer);
   const [squares, setSquares] = useState(Array(9).fill(null));
+  const [scores, setScores] = useState({ X: 0, O: 0, });
 
   let humanSymbol = 'X';
   let aiSymbol = 'O';
@@ -177,18 +178,38 @@ export default function AiBoard() {
     status = "Next player: " + currentTurn;
   }
 
-  function playAgain() {
+    useEffect(() => {
+    if (winnerSymbol && winnerSymbol[0] === 'X') {
+      setScores(prevScores => ({ ...prevScores, X: prevScores.X + 1 }));
+    } else if (winnerSymbol && winnerSymbol[0] === 'O') {
+      setScores(prevScores => ({ ...prevScores, O: prevScores.O + 1 }));
+    }
+    }, [winnerSymbol]);
+
+  function newGame(){ // Triggered when "new game" is clicked
     if (winnerSymbol || isTie) {
-      const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X';
+      const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
       setStartingPlayer(nextStartingPlayer);
       setCurrentTurn(nextStartingPlayer);
       setSquares(Array(9).fill(null));
-      setDifficulty(null);
+      setDifficulty(null); // Difficulty is reset
+    } else {
+      return;
     }
   }
 
+  function resetGame(){ // Instead of starting a new game, the current game resets with the same starting player and difficulty. Can be clicked during a game. 
+    const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player
+    setStartingPlayer(nextStartingPlayer);
+    setCurrentTurn(nextStartingPlayer);
+
+    // Empty the board
+    setSquares(Array(9).fill(null));
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center gap-8">
+    <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
+
       <div className="flex gap-4 items-center">
         <label className="font-nunito text-lg">Difficulty:</label>
         <select
@@ -219,13 +240,18 @@ export default function AiBoard() {
         })}
       </div>
 
-      {winnerSymbol ? (<Scoreboard winner={winnerSymbol} />) : null}
+      {winnerSymbol ? (<Scoreboard scores={scores} />) : null}
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
-      <button
-        className="font-cherry text-white p-2 bg-sky-300 rounded-lg disabled:opacity-50"
-        onClick={playAgain}>
-        Play again
-      </button>
+      <div className="flex items-center justify-center gap-4">
+        <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+        onClick={() => resetGame()}>
+          Reset
+          </button>
+        <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+        onClick={() => newGame()}> 
+          New game
+        </button>
+      </div>
     </div>
   );
 }
