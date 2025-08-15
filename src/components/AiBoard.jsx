@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
+import GameEndPopUp from './GameEndPopUp.jsx'
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -61,9 +62,30 @@ export default function AiBoard() {
   const [currentTurn, setCurrentTurn] = useState(startingPlayer);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [scores, setScores] = useState({ X: 0, O: 0, });
+  const [isTie, setIsTie] = useState(null);
+  const [winnerSymbol, setWinnerSymbol] = useState(null);
+  const [winningTiles, setWinningTiles] = useState([]);
+  const [showPopUp, setShowPopUp] = useState(false);
 
   let humanSymbol = 'X';
   let aiSymbol = 'O';
+
+  //Handle tie or winner
+  useEffect(() => {
+    setIsTie(boardIsFull(squares));
+    const [symbol, tiles] = calculateWinner(squares);
+    setWinnerSymbol(symbol);
+    setWinningTiles(tiles);
+    console.log("winner", symbol)
+    console.log("tie", isTie)
+  }, [squares]);
+
+  //Pop-up play again
+  useEffect(() => {
+    if (isTie || winnerSymbol) {
+      setShowPopUp(true);
+    }
+  }, [isTie, winnerSymbol]);
 
   function makeMove(i, playerSymbol) {
     if (squares[i] || calculateWinner(squares)[0]) return;
@@ -163,8 +185,8 @@ export default function AiBoard() {
     return () => clearTimeout(timer);
   }, [difficulty, currentTurn, squares]);
 
-  const [winnerSymbol, winningTiles] = calculateWinner(squares);
-  const isTie = boardIsFull(squares);
+  //const [winnerSymbol, winningTiles] = calculateWinner(squares);
+  //const isTie = boardIsFull(squares);
   const isFirstMove = boardIsEmpty(squares);
 
   let status;
@@ -209,7 +231,7 @@ export default function AiBoard() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
-
+      <GameEndPopUp isOpen={showPopUp} winner={winnerSymbol} />
       <div className="flex gap-4 items-center">
         <label className="font-nunito text-lg">Difficulty:</label>
         <select
