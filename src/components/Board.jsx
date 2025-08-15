@@ -161,7 +161,7 @@ export default function Board() {
   }, [winner]);
  
   return (
-      <div className="flex flex-col items-center justify-center gap-8">
+      <div className="flex flex-col items-center justify-center gap-4 min-h-screen">
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
       {tileIdxs.map((i)=>
       getSquare(winner, winningTiles, i))
