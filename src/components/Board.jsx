@@ -64,6 +64,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 
 export default function Board() {
   const [xIsNext, setXIsNext] = useState(true);
+  const [startingPlayer, setStartingPlayer] = useState('X');
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [winner, setWinner] = useState(null);
   const [gameTime, setGameTime] = useState(10);
@@ -71,6 +72,7 @@ export default function Board() {
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
   const [scores, setScores] = useState({ X: 0, O: 0, });
   const [isTie, setIsTie] = useState(null);
+  const [timerKey, setTimerKey] = useState(0);
 
   //Kollar efter lika
   useEffect(() => {
@@ -133,6 +135,14 @@ export default function Board() {
     setXIsNext(!xIsNext); // Update state of which symbol is next
   }
 
+  function newGame() {
+    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
+    setStartingPlayer(nextStartingPlayer);
+    setSquares(Array(9).fill(null));
+    setXIsNext(xIsNext? true : false);
+    setWinner(null);
+    setTimerKey(prevKey => prevKey + 1);
+  }
 
   const [_,winningTiles] = calculateWinner(squares);
 
@@ -177,9 +187,13 @@ export default function Board() {
           Spara
         </button>
       </div>
-      <GameTimer gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
+      <GameTimer key={timerKey} gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
-      { winner && <Scoreboard scores={scores} /> }
+      { (winner || isTie) && <Scoreboard scores={scores} /> }
+      <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+      onClick={() => newGame()}> 
+        New game
+      </button>
     </div>
 
   );
