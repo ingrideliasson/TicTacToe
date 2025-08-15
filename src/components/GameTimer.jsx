@@ -144,7 +144,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
   }
 
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-evenly items-center">
       <div className="flex flex-col items-center pl-5">
         <p className="font-bold">X-player</p>
         <motion.div
