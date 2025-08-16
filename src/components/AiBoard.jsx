@@ -231,7 +231,7 @@ export default function AiBoard() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
-      <GameEndPopUp isOpen={showPopUp} winner={winnerSymbol} />
+      <GameEndPopUp isOpen={showPopUp} setIsOpen={setShowPopUp} winner={winnerSymbol} reset={resetGame} newGame ={newGame} />
       <div className="flex gap-4 items-center">
         <label className="font-nunito text-lg">Difficulty:</label>
         <select

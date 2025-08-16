@@ -1,4 +1,7 @@
-function GameEndPopUp({ isOpen, winner }) {
+import { findAllByTestId } from "@testing-library/dom";
+import {Button} from 'react'
+
+function GameEndPopUp({ isOpen, setIsOpen, winner, reset, newGame  }) {
   if (!isOpen) return null;
 
   return (
@@ -8,12 +11,32 @@ function GameEndPopUp({ isOpen, winner }) {
 
       {/* Själva popupen */}
       <div className="relative bg-white p-6 rounded-lg shadow-lg z-11 h-1/4 w-1/4">
+        <button
+          onClick={() => {
+            setIsOpen(false);
+          }}
+        >X</button>
         <div>
           {winner ? (
             <p>Winner: {winner}!</p>
           ) : (
             <p>Game is a tie!</p>
             )}
+        </div>
+        <div>
+          <button
+            onClick={() => {
+              reset();
+              setIsOpen(false);
+            }}
+          >Reset</button>
+
+          <button
+            onClick={() => {
+              newGame();
+              setIsOpen(false);
+            }}
+          >New Game</button>
         </div>
       </div>
     </div>
