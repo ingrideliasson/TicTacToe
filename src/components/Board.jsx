@@ -1,6 +1,7 @@
 import { useState, useEffect , useRef} from 'react';
 import GameTimer from './GameTimer'
 import Scoreboard from './Scoreboard.jsx'
+import GameEndPopUp from './GameEndPopUp.jsx'
 
 
 import { motion, AnimatePresence } from "framer-motion";
@@ -73,6 +74,7 @@ export default function Board() {
   const [scores, setScores] = useState({ X: 0, O: 0, });
   const [isTie, setIsTie] = useState(null);
   const [timerKey, setTimerKey] = useState(0);
+  const [showPopUp, setShowPopUp] = useState(false);
 
   //Kollar efter lika
   useEffect(() => {
@@ -98,7 +100,12 @@ export default function Board() {
   );
   }
 
-
+  //Pop-up play again
+  useEffect(() => {
+    if (isTie || winner) {
+      setShowPopUp(true);
+    }
+  }, [isTie, winner]);
 
   useEffect(() => {
     const [newWinnerSymbol, winningTiles] = calculateWinner(squares);
@@ -175,7 +182,8 @@ export default function Board() {
   }, [winner]);
  
   return (
-      <div className="flex flex-col items-center justify-center gap-8">
+    <div className="flex flex-col items-center justify-center gap-8">
+      <GameEndPopUp isOpen={showPopUp} setIsOpen={setShowPopUp} winner={winner} reset={newGame} newGame ={newGame} />
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
       {tileIdxs.map((i)=>
       getSquare(winner, winningTiles, i))

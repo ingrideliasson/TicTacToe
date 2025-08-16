@@ -18,7 +18,7 @@ function GameEndPopUp({ isOpen, setIsOpen, winner, reset, newGame  }) {
         >X</button>
         <div>
           {winner ? (
-            <p>Winner: {winner}!</p>
+            <p>Winner: {winner[0]}!</p>
           ) : (
             <p>Game is a tie!</p>
             )}
