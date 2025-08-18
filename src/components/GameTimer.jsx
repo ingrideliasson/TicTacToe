@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { color, motion, useAnimation } from "framer-motion";
 import { use } from "framer-motion/m";
 
-function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
+function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
   const xTimerRef = useRef(null);
   const oTimerRef = useRef(null);
 
@@ -29,14 +29,24 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner}) {
     };
   }, [xIsNext]);
 
+  //stoppa timer vid lika
+  useEffect(() => {
+    if (isTie) {
+      stopX();
+      stopO();
+      setIsAnimatingX(false);
+      setIsAnimatingO(false);
+    }
+  }, [isTie]);
+
   //starta animation när timer är under 5 sek
   useEffect(() => {
     setIsAnimatingO(oTime <= 5 && !xIsNext);
     setIsAnimatingX(xTime <= 5 && xIsNext);
   
   if (winner) {
-    setIsAnimatingX(false)
-    setIsAnimatingO(false)
+    setIsAnimatingX(false);
+    setIsAnimatingO(false);
   }
   }, [oTime, xTime, xIsNext, winner]);
 
