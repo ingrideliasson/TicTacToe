@@ -12,7 +12,7 @@ export default function DifficultyDropdown({ difficulty, setDifficulty, disabled
   return (
     <div className="relative">
       <button
-        className={`border rounded-lg w-40 py-2 bg-pink-300 font-nunito font-bold text-white text-lg ${
+        className={` w-40 bg-white font-nunito text-gray-500 text-lg ${
           disabled ? "opacity-50 cursor-not-allowed" : ""
         }`}
         onClick={() => !disabled && setOpen(!open)}

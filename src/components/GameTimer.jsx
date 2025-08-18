@@ -154,16 +154,16 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
   }
 
   return (
-    <div className="flex w-full justify-between items-center">
+    <div className="flex w-full justify-between md:justify-evenly items-center">
       <div className="flex flex-col items-center pl-5">
-        <p className="font-bold">X-player</p>
+        <p className="font-cherry text-blue-400 text-2xl md:text-4xl">X</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerX}
         >{Number(xTime).toFixed(1)}</motion.div>
       </div>
       <div className="flex flex-col items-center pr-5">
-        <p className="font-bold">O-player</p>
+        <p className="font-cherry text-blue-400 text-2xl md:text-4xl">O</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerO}
