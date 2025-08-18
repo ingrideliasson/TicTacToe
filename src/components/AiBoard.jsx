@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
+import HomeButton from "./HomeButton.jsx";
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -210,18 +211,7 @@ export default function AiBoard() {
   return (
     <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
 
-      <div className="flex gap-4 items-center">
-        <label className="font-nunito text-lg">Difficulty:</label>
-        <select
-          value={difficulty || ""}
-          onChange={(e) => setDifficulty(e.target.value)}
-          disabled={!boardIsEmpty(squares)}>
-          <option value="" disabled>Select difficulty</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
-      </div>
+      <HomeButton />
 
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
         {squares.map((value, i) => {

@@ -1,11 +1,8 @@
 import { useState, useEffect , useRef} from 'react';
 import GameTimer from './GameTimer'
 import Scoreboard from './Scoreboard.jsx'
-
-
 import { motion, AnimatePresence } from "framer-motion";
-
-
+import HomeButton from './HomeButton.jsx'
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -176,6 +173,7 @@ export default function Board() {
  
   return (
       <div className="flex flex-col items-center justify-center gap-4 min-h-screen">
+      <HomeButton/>
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
       {tileIdxs.map((i)=>
       getSquare(winner, winningTiles, i))
