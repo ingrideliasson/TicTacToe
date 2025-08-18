@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
+import HomeButton from "./HomeButton.jsx";
+import DifficultyMenu from "./DifficultyMenu.jsx"
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -26,7 +28,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 
   return (
     <button
-      className="border-2 border-sky-300 h-48 w-48 font-cherry flex items-center justify-center"
+      className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
@@ -36,7 +38,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
-            isWinningTile ? "text-green-500" : "text-sky-500"
+            isWinningTile ? "text-emerald-400" : "text-blue-400"
           }`}
         >
           <motion.div
@@ -208,22 +210,18 @@ export default function AiBoard() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
+    <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 min-h-screen">
 
-      <div className="flex gap-4 items-center">
-        <label className="font-nunito text-lg">Difficulty:</label>
-        <select
-          value={difficulty || ""}
-          onChange={(e) => setDifficulty(e.target.value)}
-          disabled={!boardIsEmpty(squares)}>
-          <option value="" disabled>Select difficulty</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
+      <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
+      <HomeButton />
       </div>
 
-      <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
+      <h1 
+      className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
+      {status}
+      </h1>
+
+      <div className="grid grid-cols-3 border-2 border-blue-300">
         {squares.map((value, i) => {
           const isWinningTile = winnerSymbol && winningTiles.includes(i);
           const delay = isWinningTile ? winningTiles.indexOf(i) * 0.3 : 0;
@@ -240,14 +238,22 @@ export default function AiBoard() {
         })}
       </div>
 
+      <div className="flex gap-4 items-center">
+        <DifficultyMenu
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          disabled={!boardIsEmpty(squares)}
+        />
+      </div>
+
       <Scoreboard scores={scores}/>
-      <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
+
       <div className="flex items-center justify-center gap-4">
-        <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
         onClick={() => resetGame()}>
           Reset Score
           </button>
-        <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
+        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-emerald-400 to-blue-400  rounded-lg disabled:opacity-50 "
         onClick={() => newGame()}> 
           New game
         </button>
