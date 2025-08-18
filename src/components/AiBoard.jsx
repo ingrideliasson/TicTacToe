@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
+import DifficultyMenu from "./DifficultyMenu.jsx"
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -212,6 +213,7 @@ export default function AiBoard() {
     <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
 
       <HomeButton />
+      <DifficultyMenu />
 
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
         {squares.map((value, i) => {
