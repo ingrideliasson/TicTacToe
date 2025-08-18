@@ -213,7 +213,6 @@ export default function AiBoard() {
     <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
 
       <HomeButton />
-      <DifficultyMenu />
 
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
         {squares.map((value, i) => {
@@ -231,6 +230,14 @@ export default function AiBoard() {
           );
         })}
       </div>
+
+    <div className="flex gap-4 items-center">
+      <DifficultyMenu
+        difficulty={difficulty}
+        setDifficulty={setDifficulty}
+        disabled={!boardIsEmpty(squares)}
+      />
+    </div>
 
       <Scoreboard scores={scores}/>
       <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
