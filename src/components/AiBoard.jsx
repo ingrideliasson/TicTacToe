@@ -211,15 +211,16 @@ export default function AiBoard() {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 min-h-screen">
-      <div className="md:flex md:flex-row md:gap-8">
-        <HomeButton />
 
-        <h1 
-        className="text-3xl md:text-4xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
-        {status}
-        </h1>
+      <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
+      <HomeButton />
       </div>
-      
+
+      <h1 
+      className="text-3xl md:text-4xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
+      {status}
+      </h1>
+
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
         {squares.map((value, i) => {
           const isWinningTile = winnerSymbol && winningTiles.includes(i);
