@@ -28,7 +28,7 @@ function GameEndPopUp({ isOpen, setIsOpen, winner, reset, newGame }) {
           }}
         >X</button>
         <div className="flex justify-center items-center h-1/2 font-cherry text-3xl ">
-          <div className='bg-red-400 text-white p-3 rounded-lg'>
+          <div className='bg-pink-300 text-white p-3 rounded-lg'>
           {winner ? (
             <p>Winner: {winner[0]}!</p>
           ) : (
