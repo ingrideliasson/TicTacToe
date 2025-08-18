@@ -11,8 +11,6 @@ module.exports = {
               autour: ['Autour One', 'system-ui'],
               nunito: ['Nunito', 'sans-serif'],
               cherry: ['Cherry Bomb One', 'system-ui'],
-              shortstack: ['Short Stack', 'cursive'],
-              girlnextdoor: ['The Girl Next Door', 'cursive'],
           },
     },
   },

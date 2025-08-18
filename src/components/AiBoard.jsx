@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx'
 import { motion, AnimatePresence } from "framer-motion";
 import MainMenu from './MainMenu.jsx'
+import DifficultyDropdown from './DifficultyDropdown.jsx';
 
-function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
+function Square({ value, onSquareClick, index, isWinningTile, delay = 0, className=""}) {
   const animationVariants = [
     { y: -100, x: -100 },
     { y: -100, x: 0 },
@@ -28,7 +29,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 
   return (
     <button
-      className="border-2 border-sky-300 h-40 w-40 font-cherry flex items-center justify-center"
+      className={`h-24 w-24 md:h-40 md:w-40 font-cherry flex items-center justify-center ${className}`}
       onClick={onSquareClick}
     >
       {value && (
@@ -38,7 +39,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
-            isWinningTile ? "text-green-500" : "text-sky-500"
+            isWinningTile ? "text-emerald-400" : "text-blue-400"
           }`}
         >
           <motion.div
@@ -96,11 +97,11 @@ export default function AiBoard() {
         return;
       }
 
-      move = findWinningMove(squares, humanSymbol);
-      if (move !== null){
-        makeMove(move, aiSymbol);
-        return;
-      }
+      // move = findWinningMove(squares, humanSymbol);
+      // if (move !== null){
+      //   makeMove(move, aiSymbol);
+      //   return;
+      // }
 
       const emptySquareIndexes = [];
       squares.forEach((element, index) => { 
@@ -128,13 +129,6 @@ export default function AiBoard() {
       move = findWinningMove(squares, humanSymbol);
       if (move !== null){
           makeMove(move, aiSymbol);
-          return;
-      }
-
-      // If neither the AI or the human can win, place a pawn in a line where we already have a pawn (if possible)
-      move = findStrategicMove(squares, aiSymbol)
-      if (move !== null){
-          makeMove(move, aiSymbol)
           return;
       }
 
@@ -222,6 +216,77 @@ export default function AiBoard() {
       makeMove(randomIndex, aiSymbol) 
       return;
     }
+
+    // if (difficulty === "expert"){
+
+    //   // If AI is first, place in the middle
+    //   if (boardIsEmpty(squares) && startingPlayer === aiSymbol){
+    //     makeMove(4, aiSymbol);
+    //     return;
+    //   }
+
+    //   // AI's second move after starting
+    //   if ((squares.filter((sq) => sq !== null).length === 2) && startingPlayer === aiSymbol){
+    //     // Checks that the AI places their pawn in a corner but not the one opposite to where there is already a pawn
+    //     let possibleCorners;
+    //     if (squares[0] !== null || squares[8] !== null){
+    //         possibleCorners = [2 ,6];
+
+    //     } else if (squares[2]!== null || squares[6] !== null) {
+    //       possibleCorners =  [0, 8];
+
+    //     } else{
+    //       possibleCorners = [0, 2, 6, 8]; // If human did not place in a corner, all corners are possible
+    //     }
+
+    //     const random = Math.floor(Math.random() * possibleCorners.length); // Pick random corner
+    //     const randomCorner = possibleCorners[random];
+    //     makeMove(randomCorner, aiSymbol);
+    //     return;
+    //   }
+
+    //   // If human starts in the middle, AI places in corner
+    //   if ((squares.filter((sq) => sq !== null).length === 1) && startingPlayer === humanSymbol){
+    //     const corners = [0, 2, 6, 8];
+    //     const random = Math.floor(Math.random() * corners.length); // Pick random corner
+    //     const randomCorner = corners[random];
+    //     if (squares[randomCorner] === null) {
+    //       makeMove(randomCorner, aiSymbol);
+    //       return;
+    //     }
+        
+    //   }
+
+    //   let move = findWinningMove(squares, aiSymbol);
+    //   if (move !== null){
+    //       makeMove(move, aiSymbol);
+    //       return;
+    //   }
+
+    //   move = findWinningMove(squares, humanSymbol);
+    //   if (move !== null){
+    //       makeMove(move, aiSymbol);
+    //       return;
+    //   }
+
+    //   move = findStrategicMove(squares, aiSymbol)
+    //   if (move !== null){
+    //       makeMove(move, aiSymbol)
+    //       return;
+    //   }
+
+    //   const emptySquareIndexes = [];
+    //   squares.forEach((element, index) => { 
+    //       if (element === null) {
+    //           emptySquareIndexes.push(index);
+    //       }
+    //   });
+
+    //   const indexChoices = Math.floor(Math.random() * emptySquareIndexes.length); // Get random element of the extracted indexes (e.g. 1 or 2 if array is of length 2)
+    //   const randomIndex = emptySquareIndexes[indexChoices]; // Choose random empty square based on the index
+    //   makeMove(randomIndex, aiSymbol) 
+    //   return;
+    // }
   }
 
   useEffect(() => {
@@ -282,41 +347,37 @@ export default function AiBoard() {
 
 
   return (
-    <div className="flex flex-col items-center justify-center gap-4 min-h-screen">
+    <div className="flex flex-col items-center justify-start mt-12 gap-8 min-h-screen">
 
     { winner ? (<Scoreboard winner={winner}/>) : null }
-      <div className="w-1/3 mr-32">
+      <div className="md:w-1/3 md:mr-32">
       <MainMenu/> 
       </div>
-      <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
-     
+      <h1 className="p-4 text-4xl font-cherry bg-gradient-to-r from-blue-400 to-emerald-400 text-transparent bg-clip-text">{status}</h1>
+    
+      <div className="grid grid-cols-3 rounded-xl overflow-hidden border-4 border-blue-300">
+      <Square value={squares[0]} onSquareClick={() => humanMove(0)} className="border-b-4 border-r-4 border-blue-300 rounded-tl-xl" />
+      <Square value={squares[1]} onSquareClick={() => humanMove(1)} className="border-b-4 border-r-4 border-blue-300" />
+      <Square value={squares[2]} onSquareClick={() => humanMove(2)} className="border-b-4 border-blue-300 rounded-tr-xl" />
 
-      
-      
-      <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
-          <Square value={squares[0]} onSquareClick={() => humanMove(0)}/>
-          <Square value={squares[1]} onSquareClick={() => humanMove(1)}/>
-          <Square value={squares[2]} onSquareClick={() => humanMove(2)}/>
-          <Square value={squares[3]} onSquareClick={() => humanMove(3)}/>
-          <Square value={squares[4]} onSquareClick={() => humanMove(4)}/>
-          <Square value={squares[5]} onSquareClick={() => humanMove(5)}/>
-          <Square value={squares[6]} onSquareClick={() => humanMove(6)}/>
-          <Square value={squares[7]} onSquareClick={() => humanMove(7)}/>
-          <Square value={squares[8]} onSquareClick={() => humanMove(8)}/>
-      </div>
+      <Square value={squares[3]} onSquareClick={() => humanMove(3)} className="border-b-4 border-r-4 border-blue-300" />
+      <Square value={squares[4]} onSquareClick={() => humanMove(4)} className="border-b-4 border-r-4 border-blue-300" />
+      <Square value={squares[5]} onSquareClick={() => humanMove(5)} className="border-b-4 border-blue-300" />
+
+      <Square value={squares[6]} onSquareClick={() => humanMove(6)} className="border-r-4 border-blue-300 rounded-bl-xl" />
+      <Square value={squares[7]} onSquareClick={() => humanMove(7)} className="border-r-4 border-blue-300" />
+      <Square value={squares[8]} onSquareClick={() => humanMove(8)} className="rounded-br-xl" />
+    </div>
 
       <div className="flex gap-4 items-center">
-      <label className="font-nunito text-lg">Difficulty:</label> 
-        <select
-          value={difficulty || ""}
-          onChange={(e) => setDifficulty(e.target.value)}
-          disabled={!boardIsEmpty(squares)}>
-          <option value="" disabled>Select difficulty</option>
-          <option value="easy">Easy</option>
-          <option value="medium">Medium</option>
-          <option value="hard">Hard</option>
-        </select>
+        {/* <label className="font-nunito text-lg">Difficulty:</label> */}
+        <DifficultyDropdown
+          difficulty={difficulty}
+          setDifficulty={setDifficulty}
+          disabled={!boardIsEmpty(squares)}
+        />
       </div>
+      
 
        <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
