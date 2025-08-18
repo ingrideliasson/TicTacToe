@@ -202,7 +202,7 @@ export default function AiBoard() {
     const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player
     setStartingPlayer(nextStartingPlayer);
     setCurrentTurn(nextStartingPlayer);
-
+    setScores({ X: 0, O: 0, });
     // Empty the board
     setSquares(Array(9).fill(null));
   }
@@ -245,7 +245,7 @@ export default function AiBoard() {
       <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
         onClick={() => resetGame()}>
-          Reset
+          Reset Score
           </button>
         <button className="font-cherry text-white p-2 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
         onClick={() => newGame()}> 
