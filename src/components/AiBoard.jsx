@@ -28,7 +28,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 
   return (
     <button
-      className="border-2 border-sky-300 h-48 w-48 font-cherry flex items-center justify-center"
+      className="border-2 border-sky-300 h-28 w-28 md:h-40 md:w-40 font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
@@ -210,11 +210,16 @@ export default function AiBoard() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center gap-8 min-h-screen">
+    <div className="flex flex-col items-center justify-center gap-4 min-h-screen">
+      <div className="md:flex md:flex-row md:gap-8">
+        <HomeButton />
 
-      <HomeButton />
-      <DifficultyMenu />
-
+        <h1 
+        className="text-3xl md:text-4xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
+        {status}
+        </h1>
+      </div>
+      
       <div className="grid grid-cols-3 border-4 border-sky-300 rounded-xl">
         {squares.map((value, i) => {
           const isWinningTile = winnerSymbol && winningTiles.includes(i);
@@ -232,8 +237,9 @@ export default function AiBoard() {
         })}
       </div>
 
+      <DifficultyMenu />
       <Scoreboard scores={scores}/>
-      <h1 className="text-4xl text-pink-800 font-cherry ">{status}</h1>
+
       <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white p-2 px-4 bg-sky-300 text-white rounded-lg disabled:opacity-50 "
         onClick={() => resetGame()}>
