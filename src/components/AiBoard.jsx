@@ -23,6 +23,8 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
     if (isWinningTile) {
       const timeout = setTimeout(() => setHighlight(true), delay * 1000);
       return () => clearTimeout(timeout);
+    } else {
+      setHighlight(false);
     }
   }, [isWinningTile, delay]);
 
@@ -32,26 +34,26 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
       onClick={onSquareClick}
     >
       {value && (
-        <motion.span
+               <motion.span
           key={value + index}
           initial={{ ...animationVariants[index], opacity: 0, scale: 0.5 }}
-          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{
+            x: 0,
+            y: 0,
+            opacity: 1,
+            scale: highlight ? 1.3 : 1
+          }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
-            isWinningTile ? "text-emerald-400" : "text-blue-400"
+            isWinningTile
+              ? "text-emerald-400"
+              : value === "X"
+              ? "text-blue-400"
+              : "text-pink-300"
           }`}
         >
-          <motion.div
-            animate={highlight ? { scale: 1.3 } : { scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 10
-            }}
-          >
-            {value}
-          </motion.div>
-        </motion.span>
+          {value}
+      </motion.span>
       )}
     </button>
   );
