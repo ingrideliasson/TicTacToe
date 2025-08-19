@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
-import DifficultyMenu from "./DifficultyMenu.jsx"
+import DifficultyMenu from "./DifficultyMenu.jsx";
+import DifficultySlider from "./DifficultySlider.jsx"
+import GameButton from "./GameButton.jsx";
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -23,47 +25,49 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
     if (isWinningTile) {
       const timeout = setTimeout(() => setHighlight(true), delay * 1000);
       return () => clearTimeout(timeout);
+    } else {
+      setHighlight(false);
     }
   }, [isWinningTile, delay]);
-
   return (
     <button
       className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
-        <motion.span
+               <motion.span
           key={value + index}
           initial={{ ...animationVariants[index], opacity: 0, scale: 0.5 }}
-          animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+          animate={{
+            x: 0,
+            y: 0,
+            opacity: 1,
+            scale: highlight ? 1.3 : 1
+          }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
-            isWinningTile ? "text-emerald-400" : "text-blue-400"
+            isWinningTile
+              ? "text-emerald-400"
+              : value === "X"
+              ? "text-blue-400"
+              : "text-pink-300"
           }`}
         >
-          <motion.div
-            animate={highlight ? { scale: 1.3 } : { scale: 1 }}
-            transition={{
-              type: "spring",
-              stiffness: 300,
-              damping: 10
-            }}
-          >
-            {value}
-          </motion.div>
-        </motion.span>
+          {value}
+      </motion.span>
       )}
     </button>
   );
 }
 
 export default function AiBoard() {
-  const [difficulty, setDifficulty] = useState(null);
+  const [difficulty, setDifficulty] = useState("medium");
   const [startingPlayer, setStartingPlayer] = useState('X');
   const [currentTurn, setCurrentTurn] = useState(startingPlayer);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [scores, setScores] = useState({ X: 0, O: 0, });
   const [isFirstGameFinished, setIsFirstGameFinished] = useState(false);
+  const [isGameRunning, setIsGameRunning] = useState(false);
 
   let humanSymbol = 'X';
   let aiSymbol = 'O';
@@ -183,25 +187,32 @@ export default function AiBoard() {
     }
     }, [winnerSymbol]);
 
-  function newGame(){ // Triggered when "new game" is clicked
+  // Uppdatera isGameRunning and isFirstGameFinished
+  useEffect(() => {
     if (winnerSymbol || isTie) {
-      const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
-      setStartingPlayer(nextStartingPlayer);
-      setCurrentTurn(nextStartingPlayer);
-      setSquares(Array(9).fill(null));
-      setDifficulty(null); // Difficulty is reset
-    } else {
-      return;
+      setIsGameRunning(false);
+      setIsFirstGameFinished(true);
     }
+    else if (squares.every(square => square === null))
+      setIsGameRunning(false);
+    else
+      setIsGameRunning(true);
+  }, [winnerSymbol, isTie, squares])
+
+  function handlePlayAgainButton(){
+    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
+    setStartingPlayer(nextStartingPlayer);
+    setCurrentTurn(nextStartingPlayer);
+    setSquares(Array(9).fill(null));
   }
 
-  function resetGame(){ // Instead of starting a new game, the current game resets with the same starting player and difficulty. Can be clicked during a game. 
+  function handleResetGameButton() {
     const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player
     setStartingPlayer(nextStartingPlayer);
     setCurrentTurn(nextStartingPlayer);
     setScores({ X: 0, O: 0, });
-    // Empty the board
     setSquares(Array(9).fill(null));
+    setIsFirstGameFinished(false);
   }
 
   // Update isFirstGameFinished
@@ -215,9 +226,8 @@ export default function AiBoard() {
     <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 min-h-screen">
 
       <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
-      <HomeButton />
+        <HomeButton />
       </div>
-
       <h1 
       className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
       {status}
@@ -241,24 +251,18 @@ export default function AiBoard() {
       </div>
 
       <div className="flex gap-4 items-center">
-        <DifficultyMenu
+        <DifficultySlider
           difficulty={difficulty}
           setDifficulty={setDifficulty}
-          disabled={!boardIsEmpty(squares)}
+          disabled={isGameRunning}
         />
       </div>
 
       <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
 
       <div className="flex items-center justify-center gap-4">
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
-        onClick={() => resetGame()}>
-          Reset Score
-          </button>
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-emerald-400 to-blue-400  rounded-lg disabled:opacity-50 "
-        onClick={() => newGame()}> 
-          New game
-        </button>
+        <GameButton handleGameButton={handleResetGameButton} text="Reset game" disabled={false}/>
+        <GameButton handleGameButton={handlePlayAgainButton} text="Play again" disabled={isGameRunning}/>
       </div>
     </div>
   );

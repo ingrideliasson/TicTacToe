@@ -13,7 +13,7 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
   useEffect(() => {
     setNewGameTimeMessage("");
     setNewGameTime(gameTimeRef.current);
-  }, [isGameRunning])
+  }, [isGameRunning, gameTime])
 
   function handleNewGameTime() {
     const value = parseInt(newGameTime, 10);
