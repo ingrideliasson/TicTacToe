@@ -87,9 +87,6 @@ export default function AiBoard() {
       let move = findWinningMove(squares, aiSymbol);
       if (move !== null) return makeMove(move, aiSymbol);
 
-      move = findWinningMove(squares, humanSymbol);
-      if (move !== null) return makeMove(move, aiSymbol);
-
       const emptySquareIndexes = squares
         .map((v, idx) => v === null ? idx : null)
         .filter(v => v !== null);
@@ -103,9 +100,6 @@ export default function AiBoard() {
       if (move !== null) return makeMove(move, aiSymbol);
 
       move = findWinningMove(squares, humanSymbol);
-      if (move !== null) return makeMove(move, aiSymbol);
-
-      move = findStrategicMove(squares, aiSymbol);
       if (move !== null) return makeMove(move, aiSymbol);
 
       const emptySquareIndexes = squares
