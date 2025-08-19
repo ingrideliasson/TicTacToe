@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
-import DifficultyMenu from "./DifficultyMenu.jsx"
+import DifficultyMenu from "./DifficultyMenu.jsx";
+//import DifficultySlider from "./DifficultySlider.jsx"
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -213,9 +214,9 @@ export default function AiBoard() {
     <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 min-h-screen">
 
       <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
-      <HomeButton />
+        <HomeButton />
       </div>
-
+      <DifficultySlider/>
       <h1 
       className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
       {status}
