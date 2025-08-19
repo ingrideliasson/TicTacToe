@@ -64,6 +64,7 @@ export default function AiBoard() {
   const [currentTurn, setCurrentTurn] = useState(startingPlayer);
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [scores, setScores] = useState({ X: 0, O: 0, });
+  const [isFirstGameFinished, setIsFirstGameFinished] = useState(false);
 
   let humanSymbol = 'X';
   let aiSymbol = 'O';
@@ -210,6 +211,13 @@ export default function AiBoard() {
     setSquares(Array(9).fill(null));
   }
 
+  // Update isFirstGameFinished
+  useEffect(() => {
+    if ((winnerSymbol || isTie)) {
+      setIsFirstGameFinished(true);
+    }
+  }, [winnerSymbol, isTie])
+
   return (
     <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 min-h-screen">
 
@@ -247,7 +255,7 @@ export default function AiBoard() {
         />
       </div>
 
-      <Scoreboard scores={scores}/>
+      <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
 
       <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
