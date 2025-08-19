@@ -40,7 +40,11 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           animate={{ x: 0, y: 0, opacity: 1, scale: 1 }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
-            isWinningTile ? "text-emerald-400" : "text-blue-400"
+            isWinningTile
+              ? "text-emerald-400"
+              : value === "X"
+              ? "text-blue-400"
+              : "text-pink-300"
           }`}
         >
           <motion.div
