@@ -3,7 +3,7 @@ import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
 import DifficultyMenu from "./DifficultyMenu.jsx";
-//import DifficultySlider from "./DifficultySlider.jsx"
+import DifficultySlider from "./DifficultySlider.jsx"
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -59,7 +59,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 }
 
 export default function AiBoard() {
-  const [difficulty, setDifficulty] = useState(null);
+  const [difficulty, setDifficulty] = useState("medium");
   const [startingPlayer, setStartingPlayer] = useState('X');
   const [currentTurn, setCurrentTurn] = useState(startingPlayer);
   const [squares, setSquares] = useState(Array(9).fill(null));
@@ -196,7 +196,6 @@ export default function AiBoard() {
       setStartingPlayer(nextStartingPlayer);
       setCurrentTurn(nextStartingPlayer);
       setSquares(Array(9).fill(null));
-      setDifficulty(null); // Difficulty is reset
     } else {
       return;
     }
@@ -224,7 +223,6 @@ export default function AiBoard() {
       <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
         <HomeButton />
       </div>
-      <DifficultySlider/>
       <h1 
       className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
       {status}
@@ -248,10 +246,10 @@ export default function AiBoard() {
       </div>
 
       <div className="flex gap-4 items-center">
-        <DifficultyMenu
+        <DifficultySlider
           difficulty={difficulty}
           setDifficulty={setDifficulty}
-          disabled={!boardIsEmpty(squares)}
+          disabled={!boardIsEmpty(squares) || isFirstGameFinished}
         />
       </div>
 
