@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
 import DifficultyMenu from "./DifficultyMenu.jsx";
 import DifficultySlider from "./DifficultySlider.jsx"
+import GameButton from "./GameButton.jsx";
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0,currentTurn }) {
   const animationVariants = [
@@ -69,6 +70,7 @@ export default function AiBoard() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [scores, setScores] = useState({ X: 0, O: 0, });
   const [isFirstGameFinished, setIsFirstGameFinished] = useState(false);
+  const [isGameRunning, setIsGameRunning] = useState(false);
 
   let humanSymbol = 'X';
   let aiSymbol = 'O';
@@ -194,24 +196,32 @@ export default function AiBoard() {
     }
     }, [winnerSymbol]);
 
-  function newGame(){ // Triggered when "new game" is clicked
+  // Uppdatera isGameRunning and isFirstGameFinished
+  useEffect(() => {
     if (winnerSymbol || isTie) {
-      const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
-      setStartingPlayer(nextStartingPlayer);
-      setCurrentTurn(nextStartingPlayer);
-      setSquares(Array(9).fill(null));
-    } else {
-      return;
+      setIsGameRunning(false);
+      setIsFirstGameFinished(true);
     }
+    else if (squares.every(square => square === null))
+      setIsGameRunning(false);
+    else
+      setIsGameRunning(true);
+  }, [winnerSymbol, isTie, squares])
+
+  function handlePlayAgainButton(){
+    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
+    setStartingPlayer(nextStartingPlayer);
+    setCurrentTurn(nextStartingPlayer);
+    setSquares(Array(9).fill(null));
   }
 
-  function resetGame(){ // Instead of starting a new game, the current game resets with the same starting player and difficulty. Can be clicked during a game. 
+  function handleResetGameButton() {
     const nextStartingPlayer = startingPlayer === 'X' ? 'X' : 'O'; // Keep the same starting player
     setStartingPlayer(nextStartingPlayer);
     setCurrentTurn(nextStartingPlayer);
     setScores({ X: 0, O: 0, });
-    // Empty the board
     setSquares(Array(9).fill(null));
+    setIsFirstGameFinished(false);
   }
 
   // Update isFirstGameFinished
@@ -254,22 +264,16 @@ export default function AiBoard() {
         <DifficultySlider
           difficulty={difficulty}
           setDifficulty={setDifficulty}
-          disabled={!boardIsEmpty(squares) || isFirstGameFinished}
+          disabled={isGameRunning}
         />
       </div>
 
       <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
 
       <div className="flex items-center justify-center gap-4">
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
-        onClick={() => resetGame()}>
-          Reset Score
-          </button>
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-emerald-400 to-blue-400  rounded-lg disabled:opacity-50 "
-        onClick={() => newGame()}> 
-          New game
-        </button>
-      </div>
+        <GameButton handleGameButton={handleResetGameButton} text="Reset game" disabled={false}/>
+        <GameButton handleGameButton={handlePlayAgainButton} text="Play again" disabled={isGameRunning}/>
+     </div>
     </div>
   );
 }
