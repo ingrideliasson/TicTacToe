@@ -163,7 +163,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
         >{Number(xTime).toFixed(1)}</motion.div>
       </div>
       <div className="flex flex-col items-center pr-5">
-        <p className="font-cherry text-blue-400 text-2xl md:text-4xl">O</p>
+        <p className="font-cherry text-pink-300 text-2xl md:text-4xl">O</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerO}

@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
 import DifficultyMenu from "./DifficultyMenu.jsx"
 
-function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
+function Square({ value, onSquareClick, index, isWinningTile, delay = 0,currentTurn }) {
   const animationVariants = [
     { y: -100, x: -100 },
     { y: -100, x: 0 },
@@ -27,7 +27,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
       setHighlight(false);
     }
   }, [isWinningTile, delay]);
-
+  console.log("CurrentTurn:",currentTurn);
   return (
     <button
       className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
@@ -243,6 +243,7 @@ export default function AiBoard() {
               onSquareClick={() => humanMove(i)}
               isWinningTile={isWinningTile}
               delay={delay}
+              currentTurn={currentTurn}
             />
           );
         })}
