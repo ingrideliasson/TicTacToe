@@ -4,6 +4,7 @@ import Scoreboard from './Scoreboard.jsx'
 import { motion, AnimatePresence } from "framer-motion";
 import HomeButton from './HomeButton.jsx'
 import ChangeGameTime from './ChangeGameTime.jsx';
+import GameButton from './GameButton.jsx';
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -144,13 +145,25 @@ export default function Board() {
     setXIsNext(!xIsNext); // Update state of which symbol is next
   }
 
-  function newGame() {
+  function handlePlayAgainButton() {
     const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
     setStartingPlayer(nextStartingPlayer);
     setSquares(Array(9).fill(null));
     setXIsNext(xIsNext? true : false);
     setWinner(null);
     setTimerKey(prevKey => prevKey + 1);
+  }
+
+  function handleResetGameButton() {
+    const nextStartingPlayer = startingPlayer === 'X' ? 'O' : 'X'; // Change starting player
+    setStartingPlayer(nextStartingPlayer);
+    setSquares(Array(9).fill(null));
+    setXIsNext(xIsNext? true : false);
+    setWinner(null);
+    setTimerKey(prevKey => prevKey + 1);
+    setGameTime(10);
+    setScores({ X: 0, O: 0, });
+    setIsFirstGameFinished(false);
   }
 
   const [_,winningTiles] = calculateWinner(squares);
@@ -201,14 +214,8 @@ export default function Board() {
       <GameTimer key={timerKey} gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
       <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
       <div className="flex items-center justify-center gap-4">
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
-        >
-          Reset Score
-          </button>
-        <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-emerald-400 to-blue-400  rounded-lg disabled:opacity-50 "
-        onClick={() => newGame()}> 
-          New game
-        </button>
+        <GameButton handleGameButton={handleResetGameButton} text="Reset game" disabled={false}/>
+        <GameButton handleGameButton={handlePlayAgainButton} text="Play again" disabled={isGameRunning}/>
       </div>
 
     </div>
