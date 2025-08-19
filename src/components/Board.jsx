@@ -3,6 +3,7 @@ import GameTimer from './GameTimer'
 import Scoreboard from './Scoreboard.jsx'
 import { motion, AnimatePresence } from "framer-motion";
 import HomeButton from './HomeButton.jsx'
+import ChangeGameTime from './ChangeGameTime.jsx';
 
 function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   const animationVariants = [
@@ -69,11 +70,24 @@ export default function Board() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [winner, setWinner] = useState(null);
   const [gameTime, setGameTime] = useState(10);
-  const inputRefTimer = useRef();
   const tileIdxs = [0,1,2,3,4,5,6,7,8];
   const [scores, setScores] = useState({ X: 0, O: 0, });
   const [isTie, setIsTie] = useState(null);
   const [timerKey, setTimerKey] = useState(0);
+  const [isGameRunning, setIsGameRunning] = useState(false);
+  const [isFirstGameFinished, setIsFirstGameFinished] = useState(false);
+
+  // Uppdatera isGameRunning and isFirstGameFinished
+  useEffect(() => {
+    if ((winner || isTie)) {
+      setIsGameRunning(false);
+      setIsFirstGameFinished(true);
+    }
+    else if (squares.every(square => square === null))
+      setIsGameRunning(false);
+    else
+      setIsGameRunning(true);
+  }, [winner, isTie, squares])
 
   //Kollar efter lika
   useEffect(() => {
@@ -110,12 +124,6 @@ export default function Board() {
 
 
   
-  // Reset board when gameTime changes
-  useEffect(() => {
-    setSquares(Array(9).fill(null));
-    setXIsNext(true);
-    setWinner(null);
-  }, [gameTime]);
 
 
   function handleClick(i) {
@@ -174,7 +182,7 @@ export default function Board() {
       setScores(prevScores => ({ ...prevScores, O: prevScores.O + 1 }));
     }
   }, [winner]);
- 
+  
   return (
       <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 md:gap-2 ">
 
@@ -189,15 +197,9 @@ export default function Board() {
       getSquare(winner, winningTiles, i))
         }
       </div>
-      <div>
-        <input type="number" ref={inputRefTimer} placeholder='Ändra timer sekunder'/>
-        <button onClick={() => setGameTime(inputRefTimer.current.value)}>
-          Spara
-        </button>
-      </div>
+      <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning}/>
       <GameTimer key={timerKey} gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
-      <Scoreboard scores={scores}/>
-
+      <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
       <div className="flex items-center justify-center gap-4">
         <button className="font-cherry text-white text-xl p-3 px-6 bg-gradient-to-r from-pink-300 to-emerald-400 rounded-lg disabled:opacity-50 "
         >
