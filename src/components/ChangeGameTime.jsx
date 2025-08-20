@@ -18,7 +18,7 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
   function handleNewGameTime() {
     const value = parseInt(newGameTime, 10);
     if (isNaN(value) || value < 1 || value > 60) {
-      setNewGameTimeMessage('Value must be between 1 and 60.');
+      setNewGameTimeMessage('Values between 1 and 60.');
       setNewGameTime(gameTime);
       return;
     } else {
@@ -29,7 +29,7 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
 
   return (
     <>
-      <div className="flex flex-col">
+      <div className="flex flex-col items-center w-[200px]">
         <label htmlFor="newGameTime">Game time</label>
         <div className="flex items-center space-x-2">
           <input
@@ -65,10 +65,11 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
             Save
           </button>
         </div>
-      </div>
-      <p className="text-red-500 h-6 text-left">
+        <p className="text-red-500 h-6 text-left">
         {newGameTimeMessage}
       </p>
+      </div>
+      
     </>
   )
 }
