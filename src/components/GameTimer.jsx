@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { color, motion, useAnimation } from "framer-motion";
 import { use } from "framer-motion/m";
+import ChangeGameTime from './ChangeGameTime.jsx';
 
-function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
+function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, isGameRunning}) {
   const xTimerRef = useRef(null);
   const oTimerRef = useRef(null);
 
@@ -166,6 +167,7 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
           </p>
         </motion.div>
       </div>
+      <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning}/>
       <div className="flex flex-col items-center pr-5">
         <p className="font-cherry text-pink-300 text-2xl md:text-4xl">O</p>
         <motion.div

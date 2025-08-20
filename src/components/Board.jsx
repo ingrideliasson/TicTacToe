@@ -210,8 +210,7 @@ export default function Board() {
       getSquare(winner, winningTiles, i))
         }
       </div>
-      <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning}/>
-      <GameTimer key={timerKey} gameTime={gameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie}></GameTimer>
+      <GameTimer key={timerKey} gameTime={gameTime} setGameTime={setGameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie} isGameRunning={isGameRunning}></GameTimer>
       <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
       <div className="flex items-center justify-center gap-4">
         <GameButton handleGameButton={handleResetGameButton} text="Reset game" disabled={false}/>
