@@ -29,8 +29,8 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
 
   return (
     <>
-      <div className="flex flex-col items-center w-[200px]">
-        <label htmlFor="newGameTime">Game time</label>
+      <div className="flex flex-row items-center w-[200px]">
+        <label className="pr-2 font-cherry text-2xl bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text" htmlFor="newGameTime">Time: </label>
         <div className="flex items-center space-x-2">
           <input
             readOnly={isGameRunning}
@@ -47,7 +47,7 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
             focus:ring
             focus:ring-blue-500
             focus:ring-opacity-50
-            w-20"/>
+            w-16"/>
           <button
             disabled={isGameRunning}
             onClick={handleNewGameTime} className="

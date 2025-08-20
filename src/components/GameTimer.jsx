@@ -156,7 +156,8 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
 
   return (
     <div className="flex w-full justify-between md:justify-evenly items-center">
-      <div className="flex flex-col items-center pl-5">
+      
+      <div className="flex flex-col items-center pl-5 md:pl-40 2xl:pl-[25vw]">
         <p className="font-cherry text-blue-400 text-2xl md:text-4xl">X</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
@@ -167,8 +168,10 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
           </p>
         </motion.div>
       </div>
-      <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning}/>
-      <div className="flex flex-col items-center pr-5">
+
+      <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning} />
+      
+      <div className="flex flex-col items-center pr-5 md:pr-40 2xl:pr-[25vw]">
         <p className="font-cherry text-pink-300 text-2xl md:text-4xl">O</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
@@ -179,6 +182,7 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
           </p>
         </motion.div>
       </div>
+
     </div>
   );
 }
