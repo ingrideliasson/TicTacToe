@@ -223,13 +223,13 @@ export default function AiBoard() {
   }, [winnerSymbol, isTie])
 
   return (
-    <div className="flex flex-col items-center justify-start mt-8 md:mt-0 gap-4 min-h-screen">
+    <div className="flex flex-col items-center justify-start md:mt-0 gap-4 min-h-screen pt-[3vh] sm:pt-[1vh] xl:pt-[1vh] 2xl:xl:pt-[10vh]">
 
-      <div className="md:w-1/3 md:mr-32 md:mt-12 mb-8 md:mb-0 ">
+      <div className="hidden md:block fixed left-[250px] xl:left-[200px] 2xl:left-[750px] md:w-1/3 md:mr-32 md:mt-7 md:mb-0">
         <HomeButton />
       </div>
       <h1 
-      className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
+      className="text-4xl mt-4 md:text-5xl md:p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
       {status}
       </h1>
 
