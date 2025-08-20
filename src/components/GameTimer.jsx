@@ -44,10 +44,10 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
     setIsAnimatingO(oTime <= 5 && !xIsNext);
     setIsAnimatingX(xTime <= 5 && xIsNext);
   
-  if (winner) {
-    setIsAnimatingX(false);
-    setIsAnimatingO(false);
-  }
+  //if (winner) {
+  //  setIsAnimatingX(false);
+  //  setIsAnimatingO(false);
+  //}
   }, [oTime, xTime, xIsNext, winner]);
 
   //animation till timer
@@ -106,11 +106,11 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
     }
   }, [xTime, oTime, setWinner]);
 
-   //Stoppa timer om vinnare utses
+  //Stoppa timer om vinnare utses
   useEffect(() => {
     if (winner) {
-      stopO();
-      stopX();
+       stopO();
+       stopX();
     }
   }, [winner]);
 
@@ -160,14 +160,22 @@ function GameTimer({ gameTime, xIsNext , winner, setWinner, isTie}) {
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerX}
-        >{Number(xTime).toFixed(1)}</motion.div>
+        >
+          <p className="text-2xl">
+            {Number(xTime).toFixed(1)}
+          </p>
+        </motion.div>
       </div>
       <div className="flex flex-col items-center pr-5">
         <p className="font-cherry text-pink-300 text-2xl md:text-4xl">O</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerO}
-        >{Number(oTime).toFixed(1)}</motion.div>
+        >
+          <p className="text-2xl">
+          {Number(oTime).toFixed(1)}
+          </p>
+        </motion.div>
       </div>
     </div>
   );
