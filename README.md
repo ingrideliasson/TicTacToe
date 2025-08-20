@@ -33,12 +33,14 @@ Detta projekt är en implementation av det spelet **Tic Tac Toe** utvecklat i **
    cd TicTacToe
 
 2. Installera beroenden:
-    ```bash npm install 
+    ```bash
+    npm install 
 
 3. Starta servern med spelet:
-    ```bash npm start
+    ```bash
+    npm start
 
-4. Spelet körs sedan på ```bash http://localhost:3000
+4. Spelet körs sedan på http://localhost:3000
 
 
 ## Användning
