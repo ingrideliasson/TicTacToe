@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { color, motion, useAnimation } from "framer-motion";
-import { use } from "framer-motion/m";
+import { motion, useAnimation } from "framer-motion";
 import ChangeGameTime from './ChangeGameTime.jsx';
 
 function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, isGameRunning }) {
