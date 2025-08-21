@@ -2,7 +2,7 @@
 function GameButton({ handleGameButton, text, disabled }) {
   return (
     <button
-      disabled={disabled} 
+      disabled={disabled}
       className="
       font-cherry
       text-white
