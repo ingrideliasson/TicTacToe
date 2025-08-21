@@ -3,7 +3,7 @@ import GameTimer from "./GameTimer";
 import Scoreboard from "./Scoreboard.jsx";
 import HomeButton from "./HomeButton.jsx";
 import GameButton from "./GameButton.jsx";
-import { calculateWinner, boardIsFull } from "./gameHelpers.js";
+import { calculateWinner, boardIsFull, boardIsEmpty } from "./gameHelpers.js";
 import Square from "./Square.jsx";
 
 export default function Board() {
@@ -43,7 +43,7 @@ export default function Board() {
     if (winner || boardIsFull(squares)) {
       setIsGameRunning(false);
       setIsFirstGameFinished(true);
-    } else if (boardIsFull(squares))
+    } else if (boardIsEmpty(squares))
       setIsGameRunning(false);
     else setIsGameRunning(true);
   }, [winner, squares]);
@@ -72,7 +72,7 @@ export default function Board() {
   // symbol ('X' or 'O') and switches the turn to the other player.
   function handleClick(i) {
     // If the square is already filled or there is a winner, return early
-    if (squares[i] || calculateWinner(squares)[0]) {
+    if (squares[i] || calculateWinner(squares)[0] || winner) {
       return;
     }
 
@@ -116,14 +116,18 @@ export default function Board() {
   const [winnerSymbol, winningTiles] = winner || [null, null]; 
 
   let status;
-  if (winner) {
-    status = `${winnerSymbol} wins!`;
-  } else if (isTie) {
-    status = "Game ties.";
+  if (boardIsEmpty(squares)) {
+    status = "First player: " + (xIsNext ? 'X' : 'O');
   } else {
-    status = `Next player: ${xIsNext ? "X" : "O"}`;
+    if (winner) {
+      status = `${winnerSymbol} wins!`;
+    } else if (isTie) {
+      status = "Game ties.";
+    } else {
+      status = `Next player: ${xIsNext ? "X" : "O"}`;
+    }
   }
-
+  console.log(isGameRunning);
   return (
     <div className="flex flex-col items-center justify-start md:mt-0 gap-2 min-h-screen pt-[3vh] sm:pt-[1vh] xl:pt-[1vh] 2xl:xl:pt-[10vh]">
 

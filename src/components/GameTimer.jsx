@@ -3,7 +3,7 @@ import { color, motion, useAnimation } from "framer-motion";
 import { use } from "framer-motion/m";
 import ChangeGameTime from './ChangeGameTime.jsx';
 
-function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, isGameRunning}) {
+function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, isGameRunning }) {
   const xTimerRef = useRef(null);
   const oTimerRef = useRef(null);
 
@@ -97,7 +97,7 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
     setOTime(gameTime)
   }, [gameTime]);
 
-  //Förlorare om timer tar slut
+//Förlorare om timer tar slut
   useEffect(() => {
     if (xTime === 0) {
       setWinner("O");

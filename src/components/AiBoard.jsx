@@ -4,7 +4,7 @@ import HomeButton from "./HomeButton.jsx";
 import DifficultySlider from "./DifficultySlider.jsx"
 import GameButton from "./GameButton.jsx";
 import Square from "./Square.jsx";
-import { calculateWinner, boardIsFull, computerMove, humanMove } from "./gameHelpers.js";
+import { calculateWinner, boardIsFull, boardIsEmpty, computerMove, humanMove } from "./gameHelpers.js";
 
 export default function AiBoard() {
   const [difficulty, setDifficulty] = useState("medium");
@@ -83,12 +83,16 @@ export default function AiBoard() {
   }
 
   let status;
-  if (winnerSymbol) {
-    status = `${winnerSymbol} wins!`;
-  } else if (isTie) {
-    status = "Game ties.";
+  if (boardIsEmpty(squares)) {
+    status = "First player: " + (currentTurn);
   } else {
-    status = `Next player: ${currentTurn}`;
+    if (winnerSymbol) {
+      status = `${winnerSymbol} wins!`;
+    } else if (isTie) {
+      status = "Game ties.";
+    } else {
+      status = `Next player: ${currentTurn}`;
+    }
   }
 
   return (
