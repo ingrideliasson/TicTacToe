@@ -34,7 +34,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   console.log("Highlight:",highlight);
   return (
     <button
-      className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
+      className="border-[2px] border-neutral-200 aspect-square w-full font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
@@ -50,10 +50,10 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
             isWinningTile
-              ? "text-emerald-400"
+              ? "bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 text-transparent bg-clip-text"
               : value === "X"
               ? "text-blue-400"
-              : "text-pink-300"
+              : "text-amber-300"
           }`}
         >
           {value}
@@ -196,34 +196,56 @@ export default function Board() {
     }
   }, [winner]);
   
-  return (
-      <div className="flex flex-col items-center justify-start md:mt-0 gap-2 min-h-screen pt-[3vh] sm:pt-[1vh] xl:pt-[1vh] 2xl:xl:pt-[10vh]">
+return (
+  <div className="flex flex-col items-center justify-evenly h-screen gap-2 p-2">
 
-      <div className="hidden md:block fixed left-[250px] xl:left-[200px] 2xl:left-[750px] md:w-1/3 md:mr-32 md:mt-7 md:mb-0">
-        <HomeButton />
-      </div>
-
-      <h1 className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text">{status}</h1>
-      
-      <div className="grid grid-cols-3 border-2 border-blue-300">
-      {tileIdxs.map((i)=>
-      getSquare(winner, winningTiles, i))
-        }
-      </div>
-      <GameTimer key={timerKey} gameTime={gameTime} setGameTime={setGameTime} xIsNext={xIsNext} winner={winner} setWinner={setWinner} isTie={isTie} isGameRunning={isGameRunning}></GameTimer>
-      <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished}/>
-      <div className="flex items-center justify-center gap-4">
-        <GameButton handleGameButton={handleResetGameButton} text="Reset game" disabled={false}/>
-        <GameButton handleGameButton={handlePlayAgainButton} text="Play again" disabled={isGameRunning}/>
-      </div>
-
+    <div className="hidden md:block fixed top-2 left-24">
+      <HomeButton />
     </div>
 
-  );
+    <h1 
+      className="text-5xl mt-4 md:text-5xl p-2 font-cherry bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text text-center">
+      {status}
+    </h1>
+
+    <div className="grid grid-cols-3 border-2 border-neutral-200 shadow-lg  w-[90vw] max-w-sm">
+      {tileIdxs.map((i) => getSquare(winner, winningTiles, i))}
+    </div>
+
+    <div className="flex items-center justify-center mt-2">
+      <GameTimer
+        key={timerKey}
+        gameTime={gameTime}
+        setGameTime={setGameTime}
+        xIsNext={xIsNext}
+        winner={winner}
+        setWinner={setWinner}
+        isTie={isTie}
+        isGameRunning={isGameRunning}
+      />
+    </div>
+
+    <div className="w-full flex justify-center min-h-[3rem]">
+      <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished} />
+    </div>
+
+    <div className="flex items-center justify-center gap-4 mt-2 flex-wrap">
+      <GameButton
+        handleGameButton={handleResetGameButton}
+        text="Reset game"
+        disabled={false}
+      />
+      <GameButton
+        handleGameButton={handlePlayAgainButton}
+        text="Play again"
+        disabled={isGameRunning}
+      />
+    </div>
+  </div>
+);
+
+
 }
-
-
-
 
 function calculateWinner(squares) {
   const lines = [

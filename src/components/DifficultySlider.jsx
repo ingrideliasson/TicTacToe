@@ -20,15 +20,15 @@ export default function DifficultySlider({ difficulty, setDifficulty, disabled }
       <div
         className="relative w-64">
         {/* Slider Track */}
-        <div className="h-2 bg-gray-300 rounded-full"></div>
+        <div className="h-1 bg-neutral-200 rounded-full"></div>
 
         {/* Slider Options */}
         <div className="flex justify-between absolute w-full top-1/2 -translate-y-1/2">
           {options.map((opt, i) => (
             <button
               key={i}
-              className={`w-6 h-6 rounded-full border-2 
-                ${value === i ? "bg-blue-400 border-blue-500" : "bg-white border-gray-400"} 
+              className={`w-6 h-6 md:w-4 md:h-4 rounded-full border-2 
+                ${value === i ? "bg-amber-300 border-amber-400" : "bg-white border-neutral-300"} 
                 ${disabled ? "opacity-80 cursor-not-allowed" : ""}`
               }
               onClick={() => {
@@ -43,7 +43,7 @@ export default function DifficultySlider({ difficulty, setDifficulty, disabled }
       </div>
 
       {/* Label */}
-      <div className="text-lg font-medium">
+      <div className="text-lg font-medium font-nunito text-gray-700">
         {options[value]}
       </div>
     </div>

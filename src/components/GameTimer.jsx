@@ -155,15 +155,15 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
   }
 
   return (
-    <div className="flex w-full justify-between md:justify-evenly items-center">
+    <div className="flex w-full justify-between items-center gap-6">
       
-      <div className="flex flex-col items-center pl-5 md:pl-40 2xl:pl-[25vw]">
-        <p className="font-cherry text-blue-400 text-2xl md:text-4xl">X</p>
+      <div className="flex flex-col items-center pl-[2vw] pr-[2vw] md:pr-[4vw] 2xl:pr-[5vw]">
+        <p className="font-cherry text-blue-400 text-3xl">X</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerX}
         >
-          <p className="text-2xl">
+          <p className="text-xl font-nunito">
             {Number(xTime).toFixed(1)}
           </p>
         </motion.div>
@@ -171,13 +171,13 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
 
       <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning} />
       
-      <div className="flex flex-col items-center pr-5 md:pr-40 2xl:pr-[25vw]">
-        <p className="font-cherry text-pink-300 text-2xl md:text-4xl">O</p>
+      <div className="flex flex-col items-center pr-[2vw] pl-[2vw] md:pl-[4vw] 2xl:pl-[5vw]">
+        <p className="font-cherry text-amber-300 text-3xl">O</p>
         <motion.div
           initial={{ rotate: 0, scale: 1, color: "black" }}
           animate={animationTriggerO}
         >
-          <p className="text-2xl">
+          <p className="text-xl font-nunito">
           {Number(oTime).toFixed(1)}
           </p>
         </motion.div>

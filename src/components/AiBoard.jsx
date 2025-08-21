@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import Scoreboard from './Scoreboard.jsx';
 import { motion } from "framer-motion";
 import HomeButton from "./HomeButton.jsx";
-import DifficultyMenu from "./DifficultyMenu.jsx";
 import DifficultySlider from "./DifficultySlider.jsx"
 import GameButton from "./GameButton.jsx";
 
@@ -31,7 +30,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
   }, [isWinningTile, delay]);
   return (
     <button
-      className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
+      className="border-[2px] border-neutral-200 aspect-square w-full font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
@@ -47,10 +46,10 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
             isWinningTile
-              ? "text-emerald-400"
+              ? "bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 text-transparent bg-clip-text"
               : value === "X"
               ? "text-blue-400"
-              : "text-pink-300"
+              : "text-amber-300"
           }`}
         >
           {value}
@@ -223,17 +222,17 @@ export default function AiBoard() {
   }, [winnerSymbol, isTie])
 
   return (
-    <div className="flex flex-col items-center justify-start md:mt-0 gap-4 min-h-screen pt-[3vh] sm:pt-[1vh] xl:pt-[1vh] 2xl:xl:pt-[10vh]">
+    <div className="flex flex-col items-center justify-evenly h-screen gap-2">
 
-      <div className="hidden md:block fixed left-[250px] xl:left-[200px] 2xl:left-[750px] md:w-1/3 md:mr-32 md:mt-7 md:mb-0">
+      <div className="hidden md:block fixed top-2 left-24">
         <HomeButton />
       </div>
       <h1 
-      className="text-4xl mt-4 md:text-5xl md:p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text ">
+      className="text-4xl mt-4 md:text-5xl p-2 font-cherry bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text ">
       {status}
       </h1>
 
-      <div className="grid grid-cols-3 border-2 border-blue-300">
+      <div className="grid grid-cols-3 border-2 border-neutral-200 shadow-lg w-[90vw] max-w-sm">
         {squares.map((value, i) => {
           const isWinningTile = winnerSymbol && winningTiles.includes(i);
           const delay = isWinningTile ? winningTiles.indexOf(i) * 0.3 : 0;
