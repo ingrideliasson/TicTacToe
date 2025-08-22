@@ -27,7 +27,7 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
 
   return (
     <button
-      className="border-2 border-blue-300 h-28 w-28 md:h-36 md:w-36 font-cherry flex items-center justify-center"
+      className="border-[2px] border-neutral-200 aspect-square w-full font-cherry flex items-center justify-center"
       onClick={onSquareClick}
     >
       {value && (
@@ -43,10 +43,10 @@ function Square({ value, onSquareClick, index, isWinningTile, delay = 0 }) {
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`text-5xl ${
             isWinningTile
-              ? "text-emerald-400"
+              ? "bg-gradient-to-r from-emerald-400 via-green-400 to-lime-400 text-transparent bg-clip-text"
               : value === "X"
                 ? "text-blue-400"
-                : "text-pink-300"
+                : "text-amber-300"
           }`}
         >
           {value}

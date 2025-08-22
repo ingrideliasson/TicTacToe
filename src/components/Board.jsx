@@ -127,22 +127,23 @@ export default function Board() {
       status = `Next player: ${xIsNext ? "X" : "O"}`;
     }
   }
-  console.log(isGameRunning);
   return (
-    <div className="flex flex-col items-center justify-start md:mt-0 gap-2 min-h-screen pt-[3vh] sm:pt-[1vh] xl:pt-[1vh] 2xl:xl:pt-[10vh]">
+    <div className="flex flex-col items-center justify-evenly h-screen gap-2 p-2">
 
-      <div className="hidden md:block fixed left-[250px] xl:left-[200px] 2xl:left-[750px] md:w-1/3 md:mr-32 md:mt-7 md:mb-0">
-        <HomeButton />
-      </div>
+    <div className="hidden md:block fixed top-2 left-24">
+      <HomeButton />
+    </div>
 
-      <h1 className="text-4xl md:text-5xl p-2 font-cherry bg-gradient-to-r from-emerald-400 to-blue-400 text-transparent bg-clip-text">
-        {status}
-      </h1>
+    <h1 
+      className="text-4xl mt-4 md:text-5xl p-2 font-cherry bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text text-center">
+      {status}
+    </h1>
 
-      <div className="grid grid-cols-3 border-2 border-blue-300">
-        {tileIdxs.map((i) => getSquare(winner, winningTiles, i))}
-      </div>
+    <div className="grid grid-cols-3 border-2 border-neutral-200 shadow-lg w-[90vw] max-w-sm">
+      {tileIdxs.map((i) => getSquare(winner, winningTiles, i))}
+    </div>
 
+    <div className="flex items-center justify-center mt-2">
       <GameTimer
         key={timerKey}
         gameTime={gameTime}
@@ -152,11 +153,14 @@ export default function Board() {
         setWinner={setWinner}
         isTie={isTie}
         isGameRunning={isGameRunning}
-      ></GameTimer>
+      />
+    </div>
 
-      <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished} />
+      <div className="w-full flex justify-center min-h-[3rem]">
+        <Scoreboard scores={scores} isFirstGameFinished={isFirstGameFinished} />
+      </div>
 
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 mt-2 flex-wrap">
         <GameButton
           handleGameButton={handleResetGameButton}
           text="Reset game"
@@ -169,6 +173,6 @@ export default function Board() {
         />
       </div>
 
-    </div>
-  );
+  </div>
+);
 }
