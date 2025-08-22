@@ -1,6 +1,6 @@
 {
   "name": "tictactoe",
-  "homepage": "https://ingrideliasson.github.io/tictactoe",
+  "homepage": "https://ingrideliasson.github.io/TicTacToe",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

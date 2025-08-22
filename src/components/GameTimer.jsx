@@ -14,20 +14,35 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
   const [isAnimatingX, setIsAnimatingX] = useState(false);
 
   // Starta/stoppa timers när xIsNext ändras
-  useEffect(() => {
-    if (xIsNext) {
-      startX();
-      stopO();
-    } else {
-      startO();
-      stopX();
-    }
 
-    return () => {
-      clearInterval(xTimerRef.current);
-      clearInterval(oTimerRef.current);
-    };
-  }, [xIsNext]);
+  useEffect(() => {
+    if (winner || isTie) {
+      stopX();
+      stopO();
+      setIsAnimatingX(false);
+      setIsAnimatingO(false);
+    }
+  }, [winner, isTie]);
+
+  useEffect(() => {
+  if (!isGameRunning || winner || isTie) {
+    stopX();
+    stopO();
+    return;
+  }
+  if (xIsNext) {
+    startX();
+    stopO();
+  } else {
+    startO();
+    stopX();
+  }
+
+  return () => {
+    clearInterval(xTimerRef.current);
+    clearInterval(oTimerRef.current);
+  };
+}, [xIsNext, isGameRunning, winner, isTie]);
 
   //stoppa timer vid lika
   useEffect(() => {
@@ -39,16 +54,16 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
     }
   }, [isTie]);
 
-  //starta animation när timer är under 5 sek
   useEffect(() => {
-    setIsAnimatingO(oTime <= 5 && !xIsNext);
-    setIsAnimatingX(xTime <= 5 && xIsNext);
-  
-  //if (winner) {
-  //  setIsAnimatingX(false);
-  //  setIsAnimatingO(false);
-  //}
-  }, [oTime, xTime, xIsNext, winner]);
+  // Stop animation if winner is an array (win by 3 in a row)
+  if (Array.isArray(winner)) {
+    setIsAnimatingX(false);
+    setIsAnimatingO(false);
+    return;
+  }
+  setIsAnimatingO(oTime <= 5 && !xIsNext);
+  setIsAnimatingX(xTime <= 5 && xIsNext);
+}, [oTime, xTime, xIsNext, winner]);
 
   //animation till timer
   useEffect(() => {

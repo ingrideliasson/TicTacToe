@@ -2,18 +2,18 @@ import Board from './components/Board';
 import AiBoard from './components/AiBoard'
 import Start from './components/Start'
 import React from 'react';
-import { BrowserRouter,Routes,Route,Link } from 'react-router';
+import { HashRouter,Routes,Route } from 'react-router-dom';
 
 
 function App() {
   return (    
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
         <Route path="/" element={<Start />}/>
         <Route path="/board" element={<Board />}/>
         <Route path="/aiboard" element={<AiBoard />}/>
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   );
 }
 

@@ -18,6 +18,7 @@ export default function Board() {
   const [isGameRunning, setIsGameRunning] = useState(false);
   const [isFirstGameFinished, setIsFirstGameFinished] = useState(false); 
 
+
   // Check for a winner and set the state.
   useEffect(() => {
       if (winner) {
