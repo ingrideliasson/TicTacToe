@@ -50,7 +50,7 @@ function ChangeGameTime({ gameTime, setGameTime, isGameRunning }) {
               focus:ring
               focus:ring-blue-500
               focus:ring-opacity-50
-              w-12"/>
+              w-14"/>
             <button
               disabled={isGameRunning}
               onClick={handleNewGameTime} className="

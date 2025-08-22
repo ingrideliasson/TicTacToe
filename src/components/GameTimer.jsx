@@ -158,28 +158,30 @@ function GameTimer({ gameTime, setGameTime, xIsNext , winner, setWinner, isTie, 
       
       <div className="flex flex-col items-center pr-[1.75vw] md:pr-[4vw] 2xl:pr-[5vw]">
         <p className="font-cherry text-blue-400 text-3xl">X</p>
-        <motion.div
-          initial={{ rotate: 0, scale: 1, color: "black" }}
-          animate={animationTriggerX}
-        >
-          <p className="text-xl font-nunito">
+        <p className="text-lg tabular-nums w-[4ch] text-center">
+          <motion.span
+            initial={{ rotate: 0, scale: 1, color: "black" }}
+            animate={animationTriggerX}
+            style={{ display: "inline-block" }}
+          >
             {Number(xTime).toFixed(1)}
-          </p>
-        </motion.div>
+          </motion.span>
+        </p>
       </div>
 
       <ChangeGameTime gameTime={gameTime} setGameTime={setGameTime} isGameRunning={isGameRunning} />
       
       <div className="flex flex-col items-center pl-[1.75vh] md:pl-[4vw] 2xl:pl-[5vw]">
         <p className="font-cherry text-amber-300 text-3xl">O</p>
-        <motion.div
-          initial={{ rotate: 0, scale: 1, color: "black" }}
-          animate={animationTriggerO}
-        >
-          <p className="text-xl font-nunito">
-          {Number(oTime).toFixed(1)}
-          </p>
-        </motion.div>
+        <p className="text-lg tabular-nums w-[4ch] text-center">
+          <motion.span
+            initial={{ rotate: 0, scale: 1, color: "black" }}
+            animate={animationTriggerO}
+            style={{ display: "inline-block" }}
+          >
+            {Number(oTime).toFixed(1)}
+          </motion.span>
+        </p>
       </div>
 
     </div>

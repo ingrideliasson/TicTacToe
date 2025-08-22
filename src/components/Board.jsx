@@ -135,7 +135,7 @@ export default function Board() {
     </div>
 
     <h1 
-      className="text-5xl mt-4 md:text-5xl p-2 font-cherry bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text text-center">
+      className="text-4xl mt-4 md:text-5xl p-2 font-cherry bg-gradient-to-r from-green-400 to-blue-400 text-transparent bg-clip-text text-center">
       {status}
     </h1>
 
